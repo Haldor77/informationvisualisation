@@ -1,11 +1,10 @@
-# Table of contents
-# Learn more at https://jupyterbook.org/customize/toc.html
-
-# In _toc.yml
+# _toc.yml
 format: jb-book
-root: intro
+root: intro      # je intro.md (zonder extensie)
 chapters:
-- file: markdown
-- file: notebooks
-- file: markdown-notebooks
-- file: mymarkdownfile
+  - file: markdown      # markdown.md
+    title: Markdown Files
+  - file: mymarkdownfile # mymarkdownfile.md
+    title: Mijn Markdown
+  - file: notebooks      # notebooks.ipynb
+    title: Notebooks
