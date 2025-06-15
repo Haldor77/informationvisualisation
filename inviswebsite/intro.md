@@ -1,11 +1,3 @@
-# Welcome to your Jupyter Book
+# Introduction
 
-This is a small sample book to give you a feel for how book content is
-structured.
-It shows off a few of the major file types, as well as some sample content.
-It does not go in-depth into any particular topic - check out [the Jupyter Book documentation](https://jupyterbook.org) for more information.
-
-Check out the content pages bundled with this sample book to see more.
-
-```{tableofcontents}
-```
+Climate change and public health are increasingly interconnected domains of concern. A growing body of evidence suggests that rising carbon dioxide (CO₂) emissions, primarily from fossil fuel combustion,may be adversely affecting human health and reducing the number of years individuals live in good health (Greenstone & Fan, 2021). This data story explores the potential impact of CO₂ emissions on healthy life expectancy at birth across countries from 2000 to 2021. Specifically, we examine two contrasting perspectives on this complex issue.
