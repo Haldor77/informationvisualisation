@@ -36,65 +36,145 @@ Traceback (most recent call last):
     raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
 nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
 ------------------
+# Visualization 1: CO₂ per Capita vs Healthy Life Expectancy (2019)
+# Interactief met zoom/pan via nbAgg backend en handmatig verstelbare assen
+
+# 1) Activeer de notebook‐backend voor interactiviteit
+%matplotlib notebook
+
 import pandas as pd
-import matplotlib.pyplot as plt
 import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
 from scipy import stats
 
-# 1) Data inladen (zelfde folder)
+# 2) Stel stijlen in
+sns.set_palette('viridis')
+sns.set_style('whitegrid')
+
+# 3) Data inladen
 co2 = pd.read_csv('owid-co2-data.csv', usecols=['country','year','co2_per_capita'])
 hale = pd.read_csv('C64284D_ALL_LATEST.csv')
 
-# 2) Healthy life expectancy filter en renaming
-hale = hale.loc[
-    (hale['IND_NAME']=='Healthy life expectancy (at birth)') &
-    (hale['DIM_SEX']=='TOTAL'),
-    ['GEO_NAME_SHORT','DIM_TIME','AMOUNT_N']
-].rename(columns={
-    'GEO_NAME_SHORT':'country',
-    'DIM_TIME':'year',
-    'AMOUNT_N':'healthy_life_expectancy'
-})
+# 4) Filter Healthy Life Expectancy en hernoem kolommen
+hale = (
+    hale.loc[
+        (hale['IND_NAME'] == 'Healthy life expectancy (at birth)') &
+        (hale['DIM_SEX']  == 'TOTAL'),
+        ['GEO_NAME_SHORT','DIM_TIME','AMOUNT_N']
+    ]
+    .rename(columns={
+        'GEO_NAME_SHORT': 'country',
+        'DIM_TIME':      'year',
+        'AMOUNT_N':      'healthy_life_expectancy'
+    })
+)
 
-# 3) Merge en filter voor 2019
-co2['year'] = co2['year'].astype(int)
+# 5) Zorg dat jaartallen ints zijn
+co2['year']  = co2['year'].astype(int)
 hale['year'] = hale['year'].astype(int)
-merged = pd.merge(co2, hale, on=['country','year'], how='inner')
-df2019 = merged.query("year == 2019")
 
-# 4) Data voor plot
+# 6) Merge en filter voor 2019
+merged = pd.merge(co2, hale, on=['country','year'], how='inner')
+df2019 = merged[merged.year == 2019]\
+    .dropna(subset=['co2_per_capita','healthy_life_expectancy'])
+
+# 7) Bereken OLS‐trendline
 x = df2019['co2_per_capita']
 y = df2019['healthy_life_expectancy']
-
-# 5) Bereken OLS-trendline
-slope, intercept, r_value, p_value, std_err = stats.linregress(x, y)
+slope, intercept, r_val, p_val, std_err = stats.linregress(x, y)
 line_x = np.linspace(x.min(), x.max(), 100)
 line_y = slope * line_x + intercept
 
-# 6) Plotten met legenda voor punten én trendline
-plt.figure(figsize=(8,6))
-plt.scatter(x, y, alpha=0.7, edgecolor='k', label='Country data points')
-plt.plot(line_x, line_y, color='red', linestyle='--',
-         label=f'Trendline (R²={r_value**2:.2f})')
+# 8) Plotten
+fig, ax = plt.subplots(figsize=(8,6))
 
-plt.xlabel('CO₂ per Capita (tons)')
-plt.ylabel('Healthy Life Expectancy (years)')
-plt.title('CO₂ per Capita vs Healthy Life Expectancy (2019)')
-plt.grid(True, linestyle='--', linewidth=0.5, alpha=0.7)
-plt.legend(title='Legend')
+# Scatterplot
+sns.scatterplot(
+    x=x, y=y,
+    ax=ax,
+    edgecolor='k',
+    alpha=0.7,
+    label='Country data points'
+)
+
+# Trendline
+ax.plot(
+    line_x, line_y,
+    color='red',
+    linestyle='--',
+    label=f'Trendline (R²={r_val**2:.2f})'
+)
+
+# Labels & titel
+ax.set_xlabel('CO₂ per Capita (tons)')
+ax.set_ylabel('Healthy Life Expectancy (years)')
+ax.set_title('CO₂ per Capita vs Healthy Life Expectancy (2019)', pad=10)
+
+# Legend & grid
+ax.legend(title='Legend')
+ax.grid(True, linestyle='--', alpha=0.5)
+
 plt.tight_layout()
 plt.show()
 
 
+# 9) Assen handmatig aanpassen (voorbeeld)
+#    Voer dit in een nieuwe cel uit om direct je view aan te passen:
+#
+# ax.set_xlim(0, 20)
+# ax.set_ylim(50, 80)
+# fig.canvas.draw()
 ------------------
 
 
 [31m---------------------------------------------------------------------------[39m
 [31mModuleNotFoundError[39m                       Traceback (most recent call last)
-[36mCell[39m[36m [39m[32mIn[1][39m[32m, line 1[39m
-[32m----> [39m[32m1[39m [38;5;28;01mimport[39;00m[38;5;250m [39m[34;01mpandas[39;00m[38;5;250m [39m[38;5;28;01mas[39;00m[38;5;250m [39m[34;01mpd[39;00m
-[32m      2[39m [38;5;28;01mimport[39;00m[38;5;250m [39m[34;01mmatplotlib[39;00m[34;01m.[39;00m[34;01mpyplot[39;00m[38;5;250m [39m[38;5;28;01mas[39;00m[38;5;250m [39m[34;01mplt[39;00m
-[32m      3[39m [38;5;28;01mimport[39;00m[38;5;250m [39m[34;01mnumpy[39;00m[38;5;250m [39m[38;5;28;01mas[39;00m[38;5;250m [39m[34;01mnp[39;00m
+[36mCell[39m[36m [39m[32mIn[1][39m[32m, line 5[39m
+[32m      1[39m [38;5;66;03m# Visualization 1: CO₂ per Capita vs Healthy Life Expectancy (2019)[39;00m
+[32m      2[39m [38;5;66;03m# Interactief met zoom/pan via nbAgg backend en handmatig verstelbare assen[39;00m
+[32m      3[39m 
+[32m      4[39m [38;5;66;03m# 1) Activeer de notebook‐backend voor interactiviteit[39;00m
+[32m----> [39m[32m5[39m [43mget_ipython[49m[43m([49m[43m)[49m[43m.[49m[43mrun_line_magic[49m[43m([49m[33;43m'[39;49m[33;43mmatplotlib[39;49m[33;43m'[39;49m[43m,[49m[43m [49m[33;43m'[39;49m[33;43mnotebook[39;49m[33;43m'[39;49m[43m)[49m
+[32m      7[39m [38;5;28;01mimport[39;00m[38;5;250m [39m[34;01mpandas[39;00m[38;5;250m [39m[38;5;28;01mas[39;00m[38;5;250m [39m[34;01mpd[39;00m
+[32m      8[39m [38;5;28;01mimport[39;00m[38;5;250m [39m[34;01mnumpy[39;00m[38;5;250m [39m[38;5;28;01mas[39;00m[38;5;250m [39m[34;01mnp[39;00m
 
-[31mModuleNotFoundError[39m: No module named 'pandas'
+[36mFile [39m[32m~\AppData\Local\Programs\Python\Python313\Lib\site-packages\IPython\core\interactiveshell.py:2488[39m, in [36mInteractiveShell.run_line_magic[39m[34m(self, magic_name, line, _stack_depth)[39m
+[32m   2486[39m     kwargs[[33m'[39m[33mlocal_ns[39m[33m'[39m] = [38;5;28mself[39m.get_local_scope(stack_depth)
+[32m   2487[39m [38;5;28;01mwith[39;00m [38;5;28mself[39m.builtin_trap:
+[32m-> [39m[32m2488[39m     result = [43mfn[49m[43m([49m[43m*[49m[43margs[49m[43m,[49m[43m [49m[43m*[49m[43m*[49m[43mkwargs[49m[43m)[49m
+[32m   2490[39m [38;5;66;03m# The code below prevents the output from being displayed[39;00m
+[32m   2491[39m [38;5;66;03m# when using magics with decorator @output_can_be_silenced[39;00m
+[32m   2492[39m [38;5;66;03m# when the last Python token in the expression is a ';'.[39;00m
+[32m   2493[39m [38;5;28;01mif[39;00m [38;5;28mgetattr[39m(fn, magic.MAGIC_OUTPUT_CAN_BE_SILENCED, [38;5;28;01mFalse[39;00m):
+
+[36mFile [39m[32m~\AppData\Local\Programs\Python\Python313\Lib\site-packages\IPython\core\magics\pylab.py:103[39m, in [36mPylabMagics.matplotlib[39m[34m(self, line)[39m
+[32m     98[39m     [38;5;28mprint[39m(
+[32m     99[39m         [33m"[39m[33mAvailable matplotlib backends: [39m[38;5;132;01m%s[39;00m[33m"[39m
+[32m    100[39m         % _list_matplotlib_backends_and_gui_loops()
+[32m    101[39m     )
+[32m    102[39m [38;5;28;01melse[39;00m:
+[32m--> [39m[32m103[39m     gui, backend = [38;5;28;43mself[39;49m[43m.[49m[43mshell[49m[43m.[49m[43menable_matplotlib[49m[43m([49m[43margs[49m[43m.[49m[43mgui[49m[43m)[49m
+[32m    104[39m     [38;5;28mself[39m._show_matplotlib_backend(args.gui, backend)
+
+[36mFile [39m[32m~\AppData\Local\Programs\Python\Python313\Lib\site-packages\IPython\core\interactiveshell.py:3760[39m, in [36mInteractiveShell.enable_matplotlib[39m[34m(self, gui)[39m
+[32m   3757[39m     [38;5;28;01mimport[39;00m[38;5;250m [39m[34;01mmatplotlib_inline[39;00m[34;01m.[39;00m[34;01mbackend_inline[39;00m
+[32m   3759[39m [38;5;28;01mfrom[39;00m[38;5;250m [39m[34;01mIPython[39;00m[34;01m.[39;00m[34;01mcore[39;00m[38;5;250m [39m[38;5;28;01mimport[39;00m pylabtools [38;5;28;01mas[39;00m pt
+[32m-> [39m[32m3760[39m gui, backend = [43mpt[49m[43m.[49m[43mfind_gui_and_backend[49m[43m([49m[43mgui[49m[43m,[49m[43m [49m[38;5;28;43mself[39;49m[43m.[49m[43mpylab_gui_select[49m[43m)[49m
+[32m   3762[39m [38;5;28;01mif[39;00m gui != [38;5;28;01mNone[39;00m:
+[32m   3763[39m     [38;5;66;03m# If we have our first gui selection, store it[39;00m
+[32m   3764[39m     [38;5;28;01mif[39;00m [38;5;28mself[39m.pylab_gui_select [38;5;129;01mis[39;00m [38;5;28;01mNone[39;00m:
+
+[36mFile [39m[32m~\AppData\Local\Programs\Python\Python313\Lib\site-packages\IPython\core\pylabtools.py:338[39m, in [36mfind_gui_and_backend[39m[34m(gui, gui_select)[39m
+[32m    321[39m [38;5;28;01mdef[39;00m[38;5;250m [39m[34mfind_gui_and_backend[39m(gui=[38;5;28;01mNone[39;00m, gui_select=[38;5;28;01mNone[39;00m):
+[32m    322[39m [38;5;250m    [39m[33;03m"""Given a gui string return the gui and mpl backend.[39;00m
+[32m    323[39m 
+[32m    324[39m [33;03m    Parameters[39;00m
+[32m   (...)[39m[32m    335[39m [33;03m    'WXAgg','Qt4Agg','module://matplotlib_inline.backend_inline','agg').[39;00m
+[32m    336[39m [33;03m    """[39;00m
+[32m--> [39m[32m338[39m     [38;5;28;01mimport[39;00m[38;5;250m [39m[34;01mmatplotlib[39;00m
+[32m    340[39m     [38;5;28;01mif[39;00m _matplotlib_manages_backends():
+[32m    341[39m         backend_registry = matplotlib.backends.registry.backend_registry
+
+[31mModuleNotFoundError[39m: No module named 'matplotlib'
 
