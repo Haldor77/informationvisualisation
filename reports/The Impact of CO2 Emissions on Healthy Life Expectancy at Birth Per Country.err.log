@@ -1,0 +1,100 @@
+Traceback (most recent call last):
+  File "C:\Users\haldo\AppData\Local\Programs\Python\Python313\Lib\site-packages\jupyter_core\utils\__init__.py", line 154, in wrapped
+    asyncio.get_running_loop()
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^
+RuntimeError: no running event loop
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\haldo\AppData\Local\Programs\Python\Python313\Lib\site-packages\jupyter_cache\executors\utils.py", line 58, in single_nb_execution
+    executenb(
+    ~~~~~~~~~^
+        nb,
+        ^^^
+    ...<4 lines>...
+        **kwargs,
+        ^^^^^^^^^
+    )
+    ^
+  File "C:\Users\haldo\AppData\Local\Programs\Python\Python313\Lib\site-packages\nbclient\client.py", line 1319, in execute
+    return NotebookClient(nb=nb, resources=resources, km=km, **kwargs).execute()
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\haldo\AppData\Local\Programs\Python\Python313\Lib\site-packages\jupyter_core\utils\__init__.py", line 158, in wrapped
+    return loop.run_until_complete(inner)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "C:\Users\haldo\AppData\Local\Programs\Python\Python313\Lib\asyncio\base_events.py", line 725, in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+  File "C:\Users\haldo\AppData\Local\Programs\Python\Python313\Lib\site-packages\nbclient\client.py", line 709, in async_execute
+    await self.async_execute_cell(
+        cell, index, execution_count=self.code_cells_executed + 1
+    )
+  File "C:\Users\haldo\AppData\Local\Programs\Python\Python313\Lib\site-packages\nbclient\client.py", line 1062, in async_execute_cell
+    await self._check_raise_for_error(cell, cell_index, exec_reply)
+  File "C:\Users\haldo\AppData\Local\Programs\Python\Python313\Lib\site-packages\nbclient\client.py", line 918, in _check_raise_for_error
+    raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
+nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
+------------------
+import pandas as pd
+import matplotlib.pyplot as plt
+import numpy as np
+from scipy import stats
+
+# 1) Data inladen (zelfde folder)
+co2 = pd.read_csv('owid-co2-data.csv', usecols=['country','year','co2_per_capita'])
+hale = pd.read_csv('C64284D_ALL_LATEST.csv')
+
+# 2) Healthy life expectancy filter en renaming
+hale = hale.loc[
+    (hale['IND_NAME']=='Healthy life expectancy (at birth)') &
+    (hale['DIM_SEX']=='TOTAL'),
+    ['GEO_NAME_SHORT','DIM_TIME','AMOUNT_N']
+].rename(columns={
+    'GEO_NAME_SHORT':'country',
+    'DIM_TIME':'year',
+    'AMOUNT_N':'healthy_life_expectancy'
+})
+
+# 3) Merge en filter voor 2019
+co2['year'] = co2['year'].astype(int)
+hale['year'] = hale['year'].astype(int)
+merged = pd.merge(co2, hale, on=['country','year'], how='inner')
+df2019 = merged.query("year == 2019")
+
+# 4) Data voor plot
+x = df2019['co2_per_capita']
+y = df2019['healthy_life_expectancy']
+
+# 5) Bereken OLS-trendline
+slope, intercept, r_value, p_value, std_err = stats.linregress(x, y)
+line_x = np.linspace(x.min(), x.max(), 100)
+line_y = slope * line_x + intercept
+
+# 6) Plotten met legenda voor punten én trendline
+plt.figure(figsize=(8,6))
+plt.scatter(x, y, alpha=0.7, edgecolor='k', label='Country data points')
+plt.plot(line_x, line_y, color='red', linestyle='--',
+         label=f'Trendline (R²={r_value**2:.2f})')
+
+plt.xlabel('CO₂ per Capita (tons)')
+plt.ylabel('Healthy Life Expectancy (years)')
+plt.title('CO₂ per Capita vs Healthy Life Expectancy (2019)')
+plt.grid(True, linestyle='--', linewidth=0.5, alpha=0.7)
+plt.legend(title='Legend')
+plt.tight_layout()
+plt.show()
+
+
+------------------
+
+
+[31m---------------------------------------------------------------------------[39m
+[31mModuleNotFoundError[39m                       Traceback (most recent call last)
+[36mCell[39m[36m [39m[32mIn[1][39m[32m, line 1[39m
+[32m----> [39m[32m1[39m [38;5;28;01mimport[39;00m[38;5;250m [39m[34;01mpandas[39;00m[38;5;250m [39m[38;5;28;01mas[39;00m[38;5;250m [39m[34;01mpd[39;00m
+[32m      2[39m [38;5;28;01mimport[39;00m[38;5;250m [39m[34;01mmatplotlib[39;00m[34;01m.[39;00m[34;01mpyplot[39;00m[38;5;250m [39m[38;5;28;01mas[39;00m[38;5;250m [39m[34;01mplt[39;00m
+[32m      3[39m [38;5;28;01mimport[39;00m[38;5;250m [39m[34;01mnumpy[39;00m[38;5;250m [39m[38;5;28;01mas[39;00m[38;5;250m [39m[34;01mnp[39;00m
+
+[31mModuleNotFoundError[39m: No module named 'pandas'
+
