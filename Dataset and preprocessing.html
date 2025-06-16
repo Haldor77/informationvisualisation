@@ -32,7 +32,7 @@
     <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
     <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
   
@@ -486,51 +486,6 @@ document.write(`
 <li><p><code class="docutils literal notranslate"><span class="pre">healthy_life_expectancy</span> <span class="pre">=</span> <span class="pre">72.0</span></code> years</p></li>
 <li><p>CO₂ Intensity ≈ 0.11 t CO₂ per healthy year</p></li>
 </ul>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
-
-<span class="c1"># 1. Load datasets</span>
-<span class="n">co2</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;owid-co2-data.csv&#39;</span><span class="p">)</span>
-<span class="n">hale</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;C64284D_ALL_LATEST.csv&#39;</span><span class="p">)</span>
-
-<span class="c1"># 2. Select years &amp; fields</span>
-<span class="n">years</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2000</span><span class="p">,</span> <span class="mi">2010</span><span class="p">,</span> <span class="mi">2015</span><span class="p">,</span> <span class="mi">2019</span><span class="p">,</span> <span class="mi">2021</span><span class="p">]</span>
-<span class="n">co2_sel</span> <span class="o">=</span> <span class="n">co2</span><span class="p">[</span><span class="n">co2</span><span class="p">[</span><span class="s1">&#39;year&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">years</span><span class="p">)][[</span><span class="s1">&#39;iso_code&#39;</span><span class="p">,</span><span class="s1">&#39;country&#39;</span><span class="p">,</span><span class="s1">&#39;year&#39;</span><span class="p">,</span><span class="s1">&#39;co2_per_capita&#39;</span><span class="p">,</span><span class="s1">&#39;cumulative_co2&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-<span class="n">hale_sel</span> <span class="o">=</span> <span class="p">(</span><span class="n">hale</span><span class="p">[</span><span class="n">hale</span><span class="p">[</span><span class="s1">&#39;Year&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">years</span><span class="p">)]</span>
-            <span class="p">[[</span><span class="s1">&#39;Country&#39;</span><span class="p">,</span><span class="s1">&#39;Year&#39;</span><span class="p">,</span><span class="s1">&#39;Healthy_life_expectancy_at_birth&#39;</span><span class="p">]]</span>
-            <span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;Country&#39;</span><span class="p">:</span><span class="s1">&#39;country&#39;</span><span class="p">,</span><span class="s1">&#39;Year&#39;</span><span class="p">:</span><span class="s1">&#39;year&#39;</span><span class="p">,</span><span class="s1">&#39;Healthy_life_expectancy_at_birth&#39;</span><span class="p">:</span><span class="s1">&#39;healthy_life_expectancy&#39;</span><span class="p">})</span>
-            <span class="o">.</span><span class="n">copy</span><span class="p">())</span>
-
-<span class="c1"># 3. Exclude aggregates</span>
-<span class="n">aggregates</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;World&#39;</span><span class="p">,</span><span class="s1">&#39;Asia&#39;</span><span class="p">,</span><span class="s1">&#39;Europe&#39;</span><span class="p">,</span><span class="s1">&#39;Africa&#39;</span><span class="p">,</span><span class="s1">&#39;North America&#39;</span><span class="p">,</span><span class="s1">&#39;South America&#39;</span><span class="p">,</span><span class="s1">&#39;Oceania&#39;</span><span class="p">,</span><span class="s1">&#39;European Union (27)&#39;</span><span class="p">]</span>
-<span class="n">co2_clean</span> <span class="o">=</span> <span class="n">co2_sel</span><span class="p">[</span><span class="o">~</span><span class="n">co2_sel</span><span class="p">[</span><span class="s1">&#39;country&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">aggregates</span><span class="p">)]</span>
-<span class="n">hale_clean</span> <span class="o">=</span> <span class="n">hale_sel</span><span class="p">[</span><span class="o">~</span><span class="n">hale_sel</span><span class="p">[</span><span class="s1">&#39;country&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">aggregates</span><span class="p">)]</span>
-
-<span class="c1"># 4. Merge and clean</span>
-<span class="n">merged_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">co2_clean</span><span class="p">,</span> <span class="n">hale_clean</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;country&#39;</span><span class="p">,</span><span class="s1">&#39;year&#39;</span><span class="p">],</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;inner&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
-
-<span class="c1"># 5. Calculate CO₂ Intensity</span>
-<span class="n">merged_df</span><span class="p">[</span><span class="s1">&#39;co2_intensity&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">merged_df</span><span class="p">[</span><span class="s1">&#39;co2_per_capita&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="n">merged_df</span><span class="p">[</span><span class="s1">&#39;healthy_life_expectancy&#39;</span><span class="p">]</span>
-
-<span class="c1"># 6. Inspect</span>
-<span class="n">merged_df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">ModuleNotFoundError</span><span class="g g-Whitespace">                       </span>Traceback (most recent call last)
-<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">line</span> <span class="mi">1</span>
-<span class="ne">----&gt; </span><span class="mi">1</span> <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
-<span class="g g-Whitespace">      </span><span class="mi">3</span> <span class="c1"># 1. Load datasets</span>
-<span class="g g-Whitespace">      </span><span class="mi">4</span> <span class="n">co2</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;owid-co2-data.csv&#39;</span><span class="p">)</span>
-
-<span class="ne">ModuleNotFoundError</span>: No module named &#39;pandas&#39;
-</pre></div>
-</div>
-</div>
-</div>
 </section>
 </section>
 
