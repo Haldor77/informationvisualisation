@@ -4,10 +4,10 @@ This story explores the relationship between CO₂ emissions and healthy life ex
 
 We explore two perspectives:
 
-# Perspective 1: 
+**Perspective 1:** 
 Emissions harm health by increasing disease and reducing healthy years (Greenstone & Fan, 2021).
 
-# Perspective 2:
+**Perspective 2:**
 Development, not emissions, drives health; wealthier nations often emit more but also live longer (Deaton, 2003; Rosling et al., 2018).
 
 In the following sections, we introduce the datasets and then present visual evidence for each perspective. The goal is to understand whether CO₂ emissions are correlated with healthy life expectancy and to untangle the influence of development and policy factors.
