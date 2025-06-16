@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Ar CO₂ Emissions a Health Hazard or Just a Side Effect of Progress? &#8212; Information Visualization Story</title>
+    <title>Are CO₂ Emissions a Health Hazard or Just a Side Effect of Progress? &#8212; Information Visualization Story</title>
   
   
   
@@ -181,7 +181,7 @@
         </ul>
         <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="Dataset%20and%20preprocessing.html">Dataset and preprocessing</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Ar CO₂ Emissions a Health Hazard or Just a Side Effect of Progress?</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Are CO₂ Emissions a Health Hazard or Just a Side Effect of Progress?</a></li>
 
 
 
@@ -379,7 +379,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Ar CO₂ Emissions a Health Hazard or Just a Side Effect of Progress?</h1>
+    <h1>Are CO₂ Emissions a Health Hazard or Just a Side Effect of Progress?</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -389,7 +389,7 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Ar CO₂ Emissions a Health Hazard or Just a Side Effect of Progress?</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Are CO₂ Emissions a Health Hazard or Just a Side Effect of Progress?</a></li>
 <li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#perspective-2-are-other-factors-more-important-than-emissions-for-life-expectancy">Perspective 2: Are Other Factors More Important than Emissions for Life Expectancy?</a></li>
 <li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#visualization-4-historical-co2-emissions-vs-healthy-life-expectancy">Visualization 4. Historical CO₂ Emissions vs Healthy Life Expectancy</a></li>
 <li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#visualization-5-emissions-vs-healthy-life-expectancy-over-time-interactive">Visualization 5. Emissions vs Healthy Life Expectancy Over Time (Interactive)</a></li>
@@ -412,8 +412,8 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="ar-co2-emissions-a-health-hazard-or-just-a-side-effect-of-progress">
-<h1>Ar CO₂ Emissions a Health Hazard or Just a Side Effect of Progress?<a class="headerlink" href="#ar-co2-emissions-a-health-hazard-or-just-a-side-effect-of-progress" title="Link to this heading">#</a></h1>
+  <section class="tex2jax_ignore mathjax_ignore" id="are-co2-emissions-a-health-hazard-or-just-a-side-effect-of-progress">
+<h1>Are CO₂ Emissions a Health Hazard or Just a Side Effect of Progress?<a class="headerlink" href="#are-co2-emissions-a-health-hazard-or-just-a-side-effect-of-progress" title="Link to this heading">#</a></h1>
 <p>With the data prepared, we now present three visualizations supporting each perspective. Each visualization is accompanied by a brief insight and an explanation linking it to the respective argument.</p>
 </section>
 <section class="tex2jax_ignore mathjax_ignore" id="perspective-2-are-other-factors-more-important-than-emissions-for-life-expectancy">
@@ -656,13 +656,28 @@ pollution or other lifestyle and healthcare differences, perspective 1 would not
 <span class="expanded">Hide code cell source</span>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># ── Cel: Interactieve Plot met Plotly ──</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># ── Cel: Complete Interactieve Plot met Plotly en Renderer Setup ──</span>
+
+<span class="c1"># 1) Bibliotheken importeren</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">plotly.graph_objects</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">go</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">plotly.io</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pio</span>
 
-<span class="c1"># Data inladen en voorbereiden (zelfde stappen als voor matplotlib)</span>
+<span class="c1"># 2) Renderer instellen (kies de renderer die bij jouw omgeving past)</span>
+<span class="c1"># Voor VS Code’s Jupyter-interactive window:</span>
+<span class="n">pio</span><span class="o">.</span><span class="n">renderers</span><span class="o">.</span><span class="n">default</span> <span class="o">=</span> <span class="s2">&quot;vscode&quot;</span>
+<span class="c1"># Voor klassieke Jupyter Notebook:</span>
+<span class="c1"># pio.renderers.default = &quot;notebook&quot;</span>
+<span class="c1"># Voor direct in je webbrowser:</span>
+<span class="c1"># pio.renderers.default = &quot;browser&quot;</span>
+
+<span class="c1"># 3) Data inladen en filteren</span>
 <span class="n">co2</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;owid-co2-data.csv&#39;</span><span class="p">,</span> <span class="n">usecols</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;country&#39;</span><span class="p">,</span><span class="s1">&#39;year&#39;</span><span class="p">,</span><span class="s1">&#39;co2_per_capita&#39;</span><span class="p">])</span>
 <span class="n">hale</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;C64284D_ALL_LATEST.csv&#39;</span><span class="p">)</span>
+
+<span class="c1"># Harmoniseer landnaam in CO₂-data</span>
+<span class="n">co2</span><span class="p">[</span><span class="s1">&#39;country&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">co2</span><span class="p">[</span><span class="s1">&#39;country&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">({</span><span class="s1">&#39;China&#39;</span><span class="p">:</span><span class="s1">&#39;China&#39;</span><span class="p">})</span>  <span class="c1"># al gelijk</span>
+<span class="n">co2</span><span class="p">[</span><span class="s1">&#39;year&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">co2</span><span class="p">[</span><span class="s1">&#39;year&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
 
 <span class="c1"># Filter Healthy life expectancy</span>
 <span class="n">hale</span> <span class="o">=</span> <span class="p">(</span>
@@ -677,18 +692,19 @@ pollution or other lifestyle and healthcare differences, perspective 1 would not
         <span class="s1">&#39;AMOUNT_N&#39;</span><span class="p">:</span><span class="s1">&#39;healthy_life_expectancy&#39;</span>
     <span class="p">})</span>
 <span class="p">)</span>
-
-<span class="c1"># Year kolommen als int en merge voor China 2000–2021</span>
-<span class="n">co2</span><span class="p">[</span><span class="s1">&#39;year&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">co2</span><span class="p">[</span><span class="s1">&#39;year&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
 <span class="n">hale</span><span class="p">[</span><span class="s1">&#39;year&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">hale</span><span class="p">[</span><span class="s1">&#39;year&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
-<span class="n">co2_china</span> <span class="o">=</span> <span class="n">co2</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;country==&#39;China&#39; and 2000 &lt;= year &lt;= 2021&quot;</span><span class="p">)</span>
-<span class="n">hale_china</span> <span class="o">=</span> <span class="n">hale</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;country==&#39;China&#39; and 2000 &lt;= year &lt;= 2021&quot;</span><span class="p">)</span>
-<span class="n">china</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">co2_china</span><span class="p">,</span> <span class="n">hale_china</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;country&#39;</span><span class="p">,</span><span class="s1">&#39;year&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">&#39;year&#39;</span><span class="p">)</span>
 
-<span class="c1"># Maak de interactieve figuur</span>
+<span class="c1"># Filter op China en jaren 2000–2021</span>
+<span class="n">co2_china</span>  <span class="o">=</span> <span class="n">co2</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;country==&#39;China&#39; and 2000 &lt;= year &lt;= 2021&quot;</span><span class="p">)</span>
+<span class="n">hale_china</span> <span class="o">=</span> <span class="n">hale</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;country==&#39;China&#39; and 2000 &lt;= year &lt;= 2021&quot;</span><span class="p">)</span>
+
+<span class="c1"># Merge op country &amp; year</span>
+<span class="n">china</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">co2_china</span><span class="p">,</span> <span class="n">hale_china</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;country&#39;</span><span class="p">,</span><span class="s1">&#39;year&#39;</span><span class="p">],</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;inner&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">&#39;year&#39;</span><span class="p">)</span>
+
+<span class="c1"># 4) Bouw de interactieve figuur</span>
 <span class="n">fig</span> <span class="o">=</span> <span class="n">go</span><span class="o">.</span><span class="n">Figure</span><span class="p">()</span>
 
-<span class="c1"># CO₂ per capita (linker y-as)</span>
+<span class="c1"># CO₂ per Capita (linker y-as)</span>
 <span class="n">fig</span><span class="o">.</span><span class="n">add_trace</span><span class="p">(</span><span class="n">go</span><span class="o">.</span><span class="n">Scatter</span><span class="p">(</span>
     <span class="n">x</span><span class="o">=</span><span class="n">china</span><span class="p">[</span><span class="s1">&#39;year&#39;</span><span class="p">],</span>
     <span class="n">y</span><span class="o">=</span><span class="n">china</span><span class="p">[</span><span class="s1">&#39;co2_per_capita&#39;</span><span class="p">],</span>
@@ -696,10 +712,11 @@ pollution or other lifestyle and healthcare differences, perspective 1 would not
     <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;lines+markers&#39;</span><span class="p">,</span>
     <span class="n">marker</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;orange&#39;</span><span class="p">),</span>
     <span class="n">line</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;orange&#39;</span><span class="p">),</span>
-    <span class="n">yaxis</span><span class="o">=</span><span class="s1">&#39;y1&#39;</span>
+    <span class="n">yaxis</span><span class="o">=</span><span class="s1">&#39;y1&#39;</span><span class="p">,</span>
+    <span class="n">hovertemplate</span><span class="o">=</span><span class="s1">&#39;CO₂: %</span><span class="si">{y}</span><span class="s1"> ton&lt;extra&gt;&lt;/extra&gt;&#39;</span>
 <span class="p">))</span>
 
-<span class="c1"># Healthy life expectancy (rechter y-as)</span>
+<span class="c1"># Healthy Life Expectancy (rechter y-as)</span>
 <span class="n">fig</span><span class="o">.</span><span class="n">add_trace</span><span class="p">(</span><span class="n">go</span><span class="o">.</span><span class="n">Scatter</span><span class="p">(</span>
     <span class="n">x</span><span class="o">=</span><span class="n">china</span><span class="p">[</span><span class="s1">&#39;year&#39;</span><span class="p">],</span>
     <span class="n">y</span><span class="o">=</span><span class="n">china</span><span class="p">[</span><span class="s1">&#39;healthy_life_expectancy&#39;</span><span class="p">],</span>
@@ -707,10 +724,11 @@ pollution or other lifestyle and healthcare differences, perspective 1 would not
     <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;lines+markers&#39;</span><span class="p">,</span>
     <span class="n">marker</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">),</span>
     <span class="n">line</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">),</span>
-    <span class="n">yaxis</span><span class="o">=</span><span class="s1">&#39;y2&#39;</span>
+    <span class="n">yaxis</span><span class="o">=</span><span class="s1">&#39;y2&#39;</span><span class="p">,</span>
+    <span class="n">hovertemplate</span><span class="o">=</span><span class="s1">&#39;Gezonde levensverwachting: %</span><span class="si">{y}</span><span class="s1"> jaar&lt;extra&gt;&lt;/extra&gt;&#39;</span>
 <span class="p">))</span>
 
-<span class="c1"># Layout met dubbele y-as</span>
+<span class="c1"># 5) Layout met dubbele y-as en styling</span>
 <span class="n">fig</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
     <span class="n">title</span><span class="o">=</span><span class="s1">&#39;China: Trend of CO₂ per Capita and Healthy Life Expectancy (2000–2021)&#39;</span><span class="p">,</span>
     <span class="n">xaxis</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s1">&#39;Year&#39;</span><span class="p">),</span>
@@ -726,13 +744,20 @@ pollution or other lifestyle and healthcare differences, perspective 1 would not
         <span class="n">overlaying</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">,</span>
         <span class="n">side</span><span class="o">=</span><span class="s1">&#39;right&#39;</span>
     <span class="p">),</span>
-    <span class="n">legend</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">orientation</span><span class="o">=</span><span class="s1">&#39;h&#39;</span><span class="p">,</span> <span class="n">yanchor</span><span class="o">=</span><span class="s1">&#39;bottom&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">1.02</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">xanchor</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">)</span>
+    <span class="n">legend</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+        <span class="n">orientation</span><span class="o">=</span><span class="s1">&#39;h&#39;</span><span class="p">,</span>
+        <span class="n">yanchor</span><span class="o">=</span><span class="s1">&#39;bottom&#39;</span><span class="p">,</span>
+        <span class="n">y</span><span class="o">=</span><span class="mf">1.02</span><span class="p">,</span>
+        <span class="n">x</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+        <span class="n">xanchor</span><span class="o">=</span><span class="s1">&#39;center&#39;</span>
+    <span class="p">),</span>
+    <span class="n">margin</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">t</span><span class="o">=</span><span class="mi">80</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">l</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="mi">60</span><span class="p">)</span>
 <span class="p">)</span>
 
-<span class="c1"># Toon interactieve grafiek</span>
+<span class="c1"># 6) Toon de interactieve grafiek</span>
 <span class="n">fig</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 
-<span class="c1"># Optioneel: exporteer naar standalone HTML (voor presentatie zonder code)</span>
+<span class="c1"># 7) (Optioneel) Exporteer als standalone HTML</span>
 <span class="c1"># fig.write_html(&quot;china_trend_interactive.html&quot;, include_plotlyjs=&#39;cdn&#39;)</span>
 </pre></div>
 </div>
@@ -809,7 +834,7 @@ pollution or other lifestyle and healthcare differences, perspective 1 would not
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Ar CO₂ Emissions a Health Hazard or Just a Side Effect of Progress?</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Are CO₂ Emissions a Health Hazard or Just a Side Effect of Progress?</a></li>
 <li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#perspective-2-are-other-factors-more-important-than-emissions-for-life-expectancy">Perspective 2: Are Other Factors More Important than Emissions for Life Expectancy?</a></li>
 <li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#visualization-4-historical-co2-emissions-vs-healthy-life-expectancy">Visualization 4. Historical CO₂ Emissions vs Healthy Life Expectancy</a></li>
 <li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#visualization-5-emissions-vs-healthy-life-expectancy-over-time-interactive">Visualization 5. Emissions vs Healthy Life Expectancy Over Time (Interactive)</a></li>
