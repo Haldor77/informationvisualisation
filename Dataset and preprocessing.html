@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Dataset and preprocessing &#8212; My sample book</title>
+    <title>Dataset and Preprocessing &#8212; My sample book</title>
   
   
   
@@ -60,7 +60,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'Dataset and preprocessing';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="The Impact of CO₂ Emissions on Healthy Life Expectancy at Birth Per Country" href="The%20Impact%20of%20CO%E2%82%82%20Emissions%20on%20Healthy%20Life%20Expectancy%20at%20Birth%20Per%20Country.html" />
+    <link rel="next" title="The Impact of CO₂ Emissions on Healthy Life Expectancy at Birth Per Country" href="The%20Impact%20of%20CO2%20Emissions%20on%20Healthy%20Life%20Expectancy%20at%20Birth%20Per%20Country.html" />
     <link rel="prev" title="Introduction" href="intro.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -174,8 +174,9 @@
             </li>
         </ul>
         <ul class="current nav bd-sidenav">
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Dataset and preprocessing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="The%20Impact%20of%20CO%E2%82%82%20Emissions%20on%20Healthy%20Life%20Expectancy%20at%20Birth%20Per%20Country.html">The Impact of CO₂ Emissions on Healthy Life Expectancy at Birth Per Country</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Dataset and Preprocessing</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="The%20Impact%20of%20CO2%20Emissions%20on%20Healthy%20Life%20Expectancy%20at%20Birth%20Per%20Country.html">The Impact of CO₂ Emissions on Healthy Life Expectancy at Birth Per Country</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Reflection.html">Reflection</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Work%20Distribution.html">Work Distribution</a></li>
 </ul>
@@ -350,7 +351,9 @@ document.write(`
   </button>
 `);
 </script>
-
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
 </div></div>
       
     </div>
@@ -361,11 +364,21 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Dataset and preprocessing</h1>
+    <h1>Dataset and Preprocessing</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
             
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Dataset and Preprocessing</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#cleaning-and-merging">Cleaning and merging</a></li>
+</ul>
+
+            </nav>
         </div>
     </div>
 </div>
@@ -376,7 +389,34 @@ document.write(`
                 <article class="bd-article">
                   
   <section class="tex2jax_ignore mathjax_ignore" id="dataset-and-preprocessing">
-<h1>Dataset and preprocessing<a class="headerlink" href="#dataset-and-preprocessing" title="Link to this heading">#</a></h1>
+<h1>Dataset and Preprocessing<a class="headerlink" href="#dataset-and-preprocessing" title="Link to this heading">#</a></h1>
+<p>At the start of our project, we explored several global datasets that could help us investigate the relationship between CO₂ emissions and human health. In the end, we combined two powerful sources:
+CO₂ Emissions Dataset (Our World in Data)</p>
+<p>This dataset contains country-year data on various CO₂ indicators, including:</p>
+<ul class="simple">
+<li><p>co2_per_capita: annual CO₂ emissions per person (in tonnes)</p></li>
+<li><p>cumulative_co2: total CO₂ emitted by a country up to that year</p></li>
+<li><p>iso_code and year for alignment and filtering</p></li>
+<li><p>Healthy Life Expectancy Dataset (WHO)</p></li>
+</ul>
+<p>This dataset provides country-level values for healthy life expectancy at birth (HALE), defined as the average number of years a person is expected to live in full health, accounting for disease and disability. We use the variable:</p>
+<p>healthy_life_expectancy_at_birth (in years, both sexes combined)</p>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="cleaning-and-merging">
+<h1>Cleaning and merging<a class="headerlink" href="#cleaning-and-merging" title="Link to this heading">#</a></h1>
+<p>Both datasets span multiple decades. For our analysis, we selected five key reference years: 2000, 2010, 2015, 2019, and 2021. These allow us to examine long-term patterns, including changes before and after the COVID-19 pandemic.
+We then performed several preprocessing steps:
+Filtering Years: We retained only the selected years from both datasets.</p>
+<p><strong>Selecting Indicators:</strong> We kept only the relevant columns.</p>
+<p><strong>Cleaning:</strong> Aggregated entries (like “World” or “Asia”) were excluded. Country name mismatches were resolved using ISO codes.</p>
+<p><strong>Joining:</strong> The datasets were merged on country and year.</p>
+<p><strong>Dropping NA:</strong> Rows with missing values in the variables of interest were removed.</p>
+<p>Below is a Python snippet illustrating the full cleaning and merge process:</p>
+<p>After merging, merged_df contains for each country and selected year:
+Annual CO₂ emissions per person</p>
+<p>Cumulative CO₂ emissions</p>
+<p>Healthy life expectancy at birth</p>
+<p>This cleaned dataset forms the foundation of our visual analysis in the following sections.</p>
 </section>
 
     <script type="text/x-thebe-config">
@@ -419,7 +459,7 @@ document.write(`
       </div>
     </a>
     <a class="right-next"
-       href="The%20Impact%20of%20CO%E2%82%82%20Emissions%20on%20Healthy%20Life%20Expectancy%20at%20Birth%20Per%20Country.html"
+       href="The%20Impact%20of%20CO2%20Emissions%20on%20Healthy%20Life%20Expectancy%20at%20Birth%20Per%20Country.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
@@ -433,6 +473,23 @@ document.write(`
             </div>
             
             
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Dataset and Preprocessing</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#cleaning-and-merging">Cleaning and merging</a></li>
+</ul>
+
+  </nav></div>
+
+</div></div>
               
             
           </div>
