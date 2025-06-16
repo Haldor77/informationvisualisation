@@ -36,109 +36,127 @@ Traceback (most recent call last):
     raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
 nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
 ------------------
-# Visualization 1: CO₂ per Capita vs Healthy Life Expectancy (2019)
-# Interactief met zoom/pan via nbAgg backend en handmatig verstelbare assen
-
-# 1) Activeer de notebook‐backend voor interactiviteit
-%matplotlib notebook
-
 import pandas as pd
+import plotly.graph_objects as go
 import numpy as np
-import matplotlib.pyplot as plt
-import seaborn as sns
-from scipy import stats
 
-# 2) Stel stijlen in
-sns.set_palette('viridis')
-sns.set_style('whitegrid')
-
-# 3) Data inladen
+# 1) Data inladen en voorbereiden
 co2 = pd.read_csv('owid-co2-data.csv', usecols=['country','year','co2_per_capita'])
 hale = pd.read_csv('C64284D_ALL_LATEST.csv')
 
-# 4) Filter Healthy Life Expectancy en hernoem kolommen
+# Harmoniseren landnaam
+co2['country'] = co2['country'].replace({'United States':'United States of America'})
+
+# Filter Healthy life expectancy
 hale = (
     hale.loc[
-        (hale['IND_NAME'] == 'Healthy life expectancy (at birth)') &
-        (hale['DIM_SEX']  == 'TOTAL'),
+        (hale['IND_NAME']=='Healthy life expectancy (at birth)') &
+        (hale['DIM_SEX']=='TOTAL'),
         ['GEO_NAME_SHORT','DIM_TIME','AMOUNT_N']
     ]
     .rename(columns={
-        'GEO_NAME_SHORT': 'country',
-        'DIM_TIME':      'year',
-        'AMOUNT_N':      'healthy_life_expectancy'
+        'GEO_NAME_SHORT':'country',
+        'DIM_TIME':'year',
+        'AMOUNT_N':'healthy_life_expectancy'
     })
 )
 
-# 5) Zorg dat jaartallen ints zijn
-co2['year']  = co2['year'].astype(int)
+# Jaar als int, merge en filter voor 2019 + geselecteerde landen
+co2['year'] = co2['year'].astype(int)
 hale['year'] = hale['year'].astype(int)
-
-# 6) Merge en filter voor 2019
 merged = pd.merge(co2, hale, on=['country','year'], how='inner')
-df2019 = merged[merged.year == 2019]\
-    .dropna(subset=['co2_per_capita','healthy_life_expectancy'])
 
-# 7) Bereken OLS‐trendline
-x = df2019['co2_per_capita']
-y = df2019['healthy_life_expectancy']
-slope, intercept, r_val, p_val, std_err = stats.linregress(x, y)
-line_x = np.linspace(x.min(), x.max(), 100)
-line_y = slope * line_x + intercept
+countries = [
+    'United States of America',
+    'France',
+    'India'
+]
 
-# 8) Plotten
-fig, ax = plt.subplots(figsize=(8,6))
-
-# Scatterplot
-sns.scatterplot(
-    x=x, y=y,
-    ax=ax,
-    edgecolor='k',
-    alpha=0.7,
-    label='Country data points'
+df2019 = (
+    merged
+    .query("year == 2019 and country in @countries")
+    .set_index('country')
+    .loc[countries]
+    .reset_index()
 )
 
-# Trendline
-ax.plot(
-    line_x, line_y,
-    color='red',
-    linestyle='--',
-    label=f'Trendline (R²={r_val**2:.2f})'
+# 2) X-waarden en barbreedte
+x = np.arange(len(countries))
+width = 0.4
+
+# 3) Bouw de interactieve figuur
+fig = go.Figure()
+
+# CO₂ per Capita (linker y-as)
+fig.add_trace(go.Bar(
+    x=x - width/2,
+    y=df2019['co2_per_capita'],
+    name='CO₂ per Capita (tons)',
+    marker_color='orange',
+    yaxis='y1',
+    hovertemplate='CO₂: %{y} ton<extra></extra>'
+))
+
+# Healthy Life Expectancy (rechter y-as)
+fig.add_trace(go.Bar(
+    x=x + width/2,
+    y=df2019['healthy_life_expectancy'],
+    name='Healthy Life Expectancy (years)',
+    marker_color='blue',
+    yaxis='y2',
+    hovertemplate='Gezonde levensverwachting: %{y} jaar<extra></extra>'
+))
+
+# 4) Layout met dubbele y-as en styling gelijk aan matplotlib
+fig.update_layout(
+    title="Emissions vs Healthy Life Expectancy: U.S. vs France vs India (2019)",
+    xaxis=dict(
+        tickmode='array',
+        tickvals=x,
+        ticktext=countries,
+        tickangle=15,
+        title='Country'
+    ),
+    yaxis=dict(
+        title='CO₂ per Capita (tons)',
+        titlefont=dict(color='orange'),
+        tickfont=dict(color='orange')
+    ),
+    yaxis2=dict(
+        title='Healthy Life Expectancy (years)',
+        titlefont=dict(color='blue'),
+        tickfont=dict(color='blue'),
+        overlaying='y',
+        side='right'
+    ),
+    legend=dict(
+        orientation='h',
+        yanchor='bottom',
+        y=1.02,
+        x=0.5,
+        xanchor='center'
+    ),
+    bargap=0.2,
+    margin=dict(t=80, b=50, l=60, r=60)
 )
 
-# Labels & titel
-ax.set_xlabel('CO₂ per Capita (tons)')
-ax.set_ylabel('Healthy Life Expectancy (years)')
-ax.set_title('CO₂ per Capita vs Healthy Life Expectancy (2019)', pad=10)
+# 5) Toon interactieve grafiek
+fig.show()
 
-# Legend & grid
-ax.legend(title='Legend')
-ax.grid(True, linestyle='--', alpha=0.5)
-
-plt.tight_layout()
-plt.show()
+# Optioneel: exporteer naar standalone HTML
+# fig.write_html("emissions_health_2019.html", include_plotlyjs='cdn')
 
 
-# 9) Assen handmatig aanpassen (voorbeeld)
-#    Voer dit in een nieuwe cel uit om direct je view aan te passen:
-#
-# ax.set_xlim(0, 20)
-# ax.set_ylim(50, 80)
-# fig.canvas.draw()
 ------------------
 
 
 [31m---------------------------------------------------------------------------[39m
 [31mModuleNotFoundError[39m                       Traceback (most recent call last)
-[36mCell[39m[36m [39m[32mIn[1][39m[32m, line 7[39m
-[32m      1[39m [38;5;66;03m# Visualization 1: CO₂ per Capita vs Healthy Life Expectancy (2019)[39;00m
-[32m      2[39m [38;5;66;03m# Interactief met zoom/pan via nbAgg backend en handmatig verstelbare assen[39;00m
-[32m      3[39m 
-[32m      4[39m [38;5;66;03m# 1) Activeer de notebook‐backend voor interactiviteit[39;00m
-[32m      5[39m get_ipython().run_line_magic([33m'[39m[33mmatplotlib[39m[33m'[39m, [33m'[39m[33mnotebook[39m[33m'[39m)
-[32m----> [39m[32m7[39m [38;5;28;01mimport[39;00m[38;5;250m [39m[34;01mpandas[39;00m[38;5;250m [39m[38;5;28;01mas[39;00m[38;5;250m [39m[34;01mpd[39;00m
-[32m      8[39m [38;5;28;01mimport[39;00m[38;5;250m [39m[34;01mnumpy[39;00m[38;5;250m [39m[38;5;28;01mas[39;00m[38;5;250m [39m[34;01mnp[39;00m
-[32m      9[39m [38;5;28;01mimport[39;00m[38;5;250m [39m[34;01mmatplotlib[39;00m[34;01m.[39;00m[34;01mpyplot[39;00m[38;5;250m [39m[38;5;28;01mas[39;00m[38;5;250m [39m[34;01mplt[39;00m
+[36mCell[39m[36m [39m[32mIn[2][39m[32m, line 2[39m
+[32m      1[39m [38;5;28;01mimport[39;00m[38;5;250m [39m[34;01mpandas[39;00m[38;5;250m [39m[38;5;28;01mas[39;00m[38;5;250m [39m[34;01mpd[39;00m
+[32m----> [39m[32m2[39m [38;5;28;01mimport[39;00m[38;5;250m [39m[34;01mplotly[39;00m[34;01m.[39;00m[34;01mgraph_objects[39;00m[38;5;250m [39m[38;5;28;01mas[39;00m[38;5;250m [39m[34;01mgo[39;00m
+[32m      3[39m [38;5;28;01mimport[39;00m[38;5;250m [39m[34;01mnumpy[39;00m[38;5;250m [39m[38;5;28;01mas[39;00m[38;5;250m [39m[34;01mnp[39;00m
+[32m      5[39m [38;5;66;03m# 1) Data inladen en voorbereiden[39;00m
 
-[31mModuleNotFoundError[39m: No module named 'pandas'
+[31mModuleNotFoundError[39m: No module named 'plotly'
 
