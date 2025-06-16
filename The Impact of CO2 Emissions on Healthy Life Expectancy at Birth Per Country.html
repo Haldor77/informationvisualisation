@@ -460,13 +460,15 @@ This perspective expects to see negative correlations or warning signs that poll
 <span class="expanded">Hide code cell source</span>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># ── Complete Interactieve Grouped Barplot voor 2019 ──</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">plotly.graph_objects</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">go</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">plotly.io</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pio</span>
 
-<span class="c1"># 0) Renderer instellen voor inline weergave (kies naar behoefte)</span>
-<span class="n">pio</span><span class="o">.</span><span class="n">renderers</span><span class="o">.</span><span class="n">default</span> <span class="o">=</span> <span class="s2">&quot;notebook_connected&quot;</span>  <span class="c1"># werkt vaak in Jupyter Notebook</span>
+<span class="c1"># Renderer instellen voor inline weergave</span>
+<span class="n">pio</span><span class="o">.</span><span class="n">renderers</span><span class="o">.</span><span class="n">default</span> <span class="o">=</span> <span class="s2">&quot;notebook_connected&quot;</span>
 
 <span class="c1"># 1) Data inladen</span>
 <span class="n">co2</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;owid-co2-data.csv&#39;</span><span class="p">,</span> <span class="n">usecols</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;country&#39;</span><span class="p">,</span><span class="s1">&#39;year&#39;</span><span class="p">,</span><span class="s1">&#39;co2_per_capita&#39;</span><span class="p">])</span>
@@ -486,7 +488,7 @@ This perspective expects to see negative correlations or warning signs that poll
     <span class="p">})</span>
 <span class="p">)</span>
 
-<span class="c1"># 3) Jaar als int</span>
+<span class="c1"># 3) Jaar-kolommen als int</span>
 <span class="n">co2</span><span class="p">[</span><span class="s1">&#39;year&#39;</span><span class="p">]</span>  <span class="o">=</span> <span class="n">co2</span><span class="p">[</span><span class="s1">&#39;year&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
 <span class="n">hale</span><span class="p">[</span><span class="s1">&#39;year&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">hale</span><span class="p">[</span><span class="s1">&#39;year&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
 
@@ -495,11 +497,11 @@ This perspective expects to see negative correlations or warning signs that poll
 <span class="n">merged</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">co2</span><span class="p">,</span> <span class="n">hale</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;country&#39;</span><span class="p">,</span><span class="s1">&#39;year&#39;</span><span class="p">],</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;inner&#39;</span><span class="p">)</span>
 <span class="n">df2019</span> <span class="o">=</span> <span class="n">merged</span><span class="p">[</span><span class="n">merged</span><span class="p">[</span><span class="s1">&#39;year&#39;</span><span class="p">]</span><span class="o">==</span><span class="mi">2019</span><span class="p">]</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;co2_per_capita&#39;</span><span class="p">,</span><span class="s1">&#39;healthy_life_expectancy&#39;</span><span class="p">])</span>
 
-<span class="c1"># 5) Specifieke landen in de juiste volgorde</span>
+<span class="c1"># 5) Specifieke landen in juiste volgorde</span>
 <span class="n">countries</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s1">&#39;United States of America&#39;</span><span class="p">,</span>  <span class="c1"># hoge emitter</span>
-    <span class="s1">&#39;France&#39;</span><span class="p">,</span>                     <span class="c1"># gemiddelde emitter</span>
-    <span class="s1">&#39;India&#39;</span>                       <span class="c1"># lage emitter</span>
+    <span class="s1">&#39;United States of America&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;France&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;India&#39;</span>
 <span class="p">]</span>
 <span class="n">df3</span> <span class="o">=</span> <span class="n">df2019</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;country&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">countries</span><span class="p">]</span>
 
@@ -515,9 +517,9 @@ This perspective expects to see negative correlations or warning signs that poll
     <span class="n">x</span><span class="o">=</span><span class="n">x</span> <span class="o">-</span> <span class="n">width</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span>
     <span class="n">y</span><span class="o">=</span><span class="n">df3</span><span class="p">[</span><span class="s1">&#39;co2_per_capita&#39;</span><span class="p">],</span>
     <span class="n">name</span><span class="o">=</span><span class="s1">&#39;CO₂ per Capita (tons)&#39;</span><span class="p">,</span>
+    <span class="n">marker_color</span><span class="o">=</span><span class="s1">&#39;orange&#39;</span><span class="p">,</span>
     <span class="n">marker_line_width</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
     <span class="n">marker_line_color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span>
-    <span class="n">marker_color</span><span class="o">=</span><span class="s1">&#39;orange&#39;</span><span class="p">,</span>
     <span class="n">hovertemplate</span><span class="o">=</span><span class="s1">&#39;CO₂: %</span><span class="si">{y:.2f}</span><span class="s1"> ton&lt;extra&gt;&lt;/extra&gt;&#39;</span><span class="p">,</span>
     <span class="n">yaxis</span><span class="o">=</span><span class="s1">&#39;y1&#39;</span>
 <span class="p">))</span>
@@ -527,14 +529,166 @@ This perspective expects to see negative correlations or warning signs that poll
     <span class="n">x</span><span class="o">=</span><span class="n">x</span> <span class="o">+</span> <span class="n">width</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span>
     <span class="n">y</span><span class="o">=</span><span class="n">df3</span><span class="p">[</span><span class="s1">&#39;healthy_life_expectancy&#39;</span><span class="p">],</span>
     <span class="n">name</span><span class="o">=</span><span class="s1">&#39;Healthy Life Expectancy (years)&#39;</span><span class="p">,</span>
+    <span class="n">marker_color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">,</span>
     <span class="n">marker_line_width</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
     <span class="n">marker_line_color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span>
-    <span class="n">marker_color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">,</span>
     <span class="n">hovertemplate</span><span class="o">=</span><span class="s1">&#39;Gezonde levensverwachting: %</span><span class="si">{y:.1f}</span><span class="s1"> jaar&lt;extra&gt;&lt;/extra&gt;&#39;</span><span class="p">,</span>
     <span class="n">yaxis</span><span class="o">=</span><span class="s1">&#39;y2&#39;</span>
 <span class="p">))</span>
 
 <span class="c1"># 8) Layout met dubbele y-as en styling</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
+    <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Emissions vs Healthy Life Expectancy: U.S. vs France vs India (2019)&quot;</span><span class="p">,</span>
+    <span class="n">xaxis</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+        <span class="n">tickmode</span><span class="o">=</span><span class="s1">&#39;array&#39;</span><span class="p">,</span>
+        <span class="n">tickvals</span><span class="o">=</span><span class="n">x</span><span class="p">,</span>
+        <span class="n">ticktext</span><span class="o">=</span><span class="n">countries</span><span class="p">,</span>
+        <span class="n">tickangle</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span>
+        <span class="n">title</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s1">&#39;Country&#39;</span><span class="p">)</span>
+    <span class="p">),</span>
+    <span class="n">yaxis</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+        <span class="n">title</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s1">&#39;CO₂ per Capita (tons)&#39;</span><span class="p">,</span> <span class="n">font</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;orange&#39;</span><span class="p">)),</span>
+        <span class="n">tickfont</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;orange&#39;</span><span class="p">)</span>
+    <span class="p">),</span>
+    <span class="n">yaxis2</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+        <span class="n">title</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s1">&#39;Healthy Life Expectancy (years)&#39;</span><span class="p">,</span> <span class="n">font</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">)),</span>
+        <span class="n">tickfont</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">),</span>
+        <span class="n">overlaying</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">,</span>
+        <span class="n">side</span><span class="o">=</span><span class="s1">&#39;right&#39;</span>
+    <span class="p">),</span>
+    <span class="n">legend</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+        <span class="n">orientation</span><span class="o">=</span><span class="s1">&#39;h&#39;</span><span class="p">,</span>
+        <span class="n">yanchor</span><span class="o">=</span><span class="s1">&#39;bottom&#39;</span><span class="p">,</span>
+        <span class="n">y</span><span class="o">=</span><span class="mf">1.02</span><span class="p">,</span>
+        <span class="n">x</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+        <span class="n">xanchor</span><span class="o">=</span><span class="s1">&#39;center&#39;</span>
+    <span class="p">),</span>
+    <span class="n">bargap</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>
+    <span class="n">margin</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">t</span><span class="o">=</span><span class="mi">80</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">l</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="mi">60</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="c1"># 9) Toon de interactieve grafiek</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="c1"># (Optioneel) Exporteer als standalone HTML</span>
+<span class="c1"># fig.write_html(&quot;emissions_health_2019.html&quot;, include_plotlyjs=&#39;cdn&#39;)</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<div class="output text_html">        <script type="text/javascript">
+        window.PlotlyConfig = {MathJaxConfig: 'local'};
+        if (window.MathJax && window.MathJax.Hub && window.MathJax.Hub.Config) {window.MathJax.Hub.Config({SVG: {font: "STIX-Web"}});}
+        </script>
+        <script type="module">import "https://cdn.plot.ly/plotly-3.0.1.min"</script>
+        </div><div class="output text_html"><div>            <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_SVG"></script><script type="text/javascript">if (window.MathJax && window.MathJax.Hub && window.MathJax.Hub.Config) {window.MathJax.Hub.Config({SVG: {font: "STIX-Web"}});}</script>                <script type="text/javascript">window.PlotlyConfig = {MathJaxConfig: 'local'};</script>
+        <script charset="utf-8" src="https://cdn.plot.ly/plotly-3.0.1.min.js"></script>                <div id="dfc4303a-73e7-40fd-896f-7ef2f3c83136" class="plotly-graph-div" style="height:525px; width:100%;"></div>            <script type="text/javascript">                window.PLOTLYENV=window.PLOTLYENV || {};                                if (document.getElementById("dfc4303a-73e7-40fd-896f-7ef2f3c83136")) {                    Plotly.newPlot(                        "dfc4303a-73e7-40fd-896f-7ef2f3c83136",                        [{"hovertemplate":"CO\u2082: %{y:.2f} ton\u003cextra\u003e\u003c\u002fextra\u003e","marker":{"color":"orange","line":{"color":"black","width":1}},"name":"CO\u2082 per Capita (tons)","x":{"dtype":"f8","bdata":"ZmZmZmZmxr9mZmZmZmbqPzMzMzMzM\u002f0\u002f"},"y":{"dtype":"f8","bdata":"Di2yne8nL0B56SYxCCwTQH9qvHSTGP4\u002f"},"yaxis":"y","type":"bar"},{"hovertemplate":"Gezonde levensverwachting: %{y:.1f} jaar\u003cextra\u003e\u003c\u002fextra\u003e","marker":{"color":"blue","line":{"color":"black","width":1}},"name":"Healthy Life Expectancy (years)","x":{"dtype":"f8","bdata":"ZmZmZmZmxj\u002fNzMzMzMzyP2ZmZmZmZgFA"},"y":{"dtype":"f8","bdata":"MxtkkpGHUEDMKJZbWgVSQCbHndLBKk5A"},"yaxis":"y2","type":"bar"}],                        {"template":{"data":{"histogram2dcontour":[{"type":"histogram2dcontour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"choropleth":[{"type":"choropleth","colorbar":{"outlinewidth":0,"ticks":""}}],"histogram2d":[{"type":"histogram2d","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmap":[{"type":"heatmap","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"contourcarpet":[{"type":"contourcarpet","colorbar":{"outlinewidth":0,"ticks":""}}],"contour":[{"type":"contour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"surface":[{"type":"surface","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"mesh3d":[{"type":"mesh3d","colorbar":{"outlinewidth":0,"ticks":""}}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"parcoords":[{"type":"parcoords","line":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolargl":[{"type":"scatterpolargl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"scattergeo":[{"type":"scattergeo","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolar":[{"type":"scatterpolar","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"scattergl":[{"type":"scattergl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatter3d":[{"type":"scatter3d","line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattermap":[{"type":"scattermap","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattermapbox":[{"type":"scattermapbox","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterternary":[{"type":"scatterternary","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattercarpet":[{"type":"scattercarpet","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"type":"carpet"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}],"barpolar":[{"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"pie":[{"automargin":true,"type":"pie"}]},"layout":{"autotypenumbers":"strict","colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"hovermode":"closest","hoverlabel":{"align":"left"},"paper_bgcolor":"white","plot_bgcolor":"#E5ECF6","polar":{"bgcolor":"#E5ECF6","angularaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"radialaxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"ternary":{"bgcolor":"#E5ECF6","aaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"baxis":{"gridcolor":"white","linecolor":"white","ticks":""},"caxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]]},"xaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"yaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"scene":{"xaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"yaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"zaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"geo":{"bgcolor":"white","landcolor":"#E5ECF6","subunitcolor":"white","showland":true,"showlakes":true,"lakecolor":"white"},"title":{"x":0.05},"mapbox":{"style":"light"}}},"xaxis":{"title":{"text":"Country"},"tickmode":"array","tickvals":{"dtype":"i1","bdata":"AAEC"},"ticktext":["United States of America","France","India"],"tickangle":15},"yaxis":{"title":{"font":{"color":"orange"},"text":"CO\u2082 per Capita (tons)"},"tickfont":{"color":"orange"}},"yaxis2":{"title":{"text":"Healthy Life Expectancy (years)","font":{"color":"blue"}},"tickfont":{"color":"blue"},"overlaying":"y","side":"right"},"legend":{"orientation":"h","yanchor":"bottom","y":1.02,"x":0.5,"xanchor":"center"},"margin":{"t":80,"b":50,"l":60,"r":60},"title":{"text":"Emissions vs Healthy Life Expectancy: U.S. vs France vs India (2019)"},"bargap":0.2},                        {"responsive": true}                    ).then(function(){
+                            
+var gd = document.getElementById('dfc4303a-73e7-40fd-896f-7ef2f3c83136');
+var x = new MutationObserver(function (mutations, observer) {{
+        var display = window.getComputedStyle(gd).display;
+        if (!display || display === 'none') {{
+            console.log([gd, 'removed!']);
+            Plotly.purge(gd);
+            observer.disconnect();
+        }}
+}});
+
+// Listen for the removal of the full notebook cells
+var notebookContainer = gd.closest('#notebook-container');
+if (notebookContainer) {{
+    x.observe(notebookContainer, {childList: true});
+}}
+
+// Listen for the clearing of the current output cell
+var outputEl = gd.closest('.output');
+if (outputEl) {{
+    x.observe(outputEl, {childList: true});
+}}
+
+                        })                };            </script>        </div></div></div>
+</div>
+<p><strong>Caption:</strong> Each point is a country in 2019. We might expect a downward trend if emissions were broadly harming health, but the pattern is not clear-cut. Many high-emission countries (far right) actually enjoy high healthy life expectancy, while low-emission countries (far left) often have low healthy life expectancy. The fitted trendline (from an OLS regression) is nearly flat, indicating no strong linear relationship globally.</p>
+<p><strong>Insight</strong>: At a global level, there is no obvious negative correlation between CO₂ emissions per person and healthy life expectancy. For example, the United States and Gulf countries have some of the highest per-capita CO₂ emissions yet still report healthy life expectancies around 65–70+ years. In contrast, countries with minimal emissions (mostly low-income nations) cluster in the lower-left, with healthy life expectancy often below 60 years. This suggests that factors other than emissions (like economic development) are dominating the health outcomes. However, supporters of Perspective 1 point out that this global view could mask specific health costs of emissions for instance, chronic air pollution in rapidly industrializing countries might be limiting further health gains. The lack of a clear inverse trend here hints that CO₂’s impact on health is indirect and tangled with development rather than a simple one-to-one effect.</p>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="visualization-2-emissions-and-health-in-selected-countries-2019">
+<h1>Visualization 2. Emissions and Health in Selected Countries (2019)<a class="headerlink" href="#visualization-2-emissions-and-health-in-selected-countries-2019" title="Link to this heading">#</a></h1>
+<p>– Case comparison of a high emitter vs. a low emitter vs. a moderate emitter.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">plotly.graph_objects</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">go</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="c1"># 1) Data inladen en voorbereiden</span>
+<span class="n">co2</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;owid-co2-data.csv&#39;</span><span class="p">,</span> <span class="n">usecols</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;country&#39;</span><span class="p">,</span><span class="s1">&#39;year&#39;</span><span class="p">,</span><span class="s1">&#39;co2_per_capita&#39;</span><span class="p">])</span>
+<span class="n">hale</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;C64284D_ALL_LATEST.csv&#39;</span><span class="p">)</span>
+
+<span class="c1"># Harmoniseer landnaam</span>
+<span class="n">co2</span><span class="p">[</span><span class="s1">&#39;country&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">co2</span><span class="p">[</span><span class="s1">&#39;country&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">({</span><span class="s1">&#39;United States&#39;</span><span class="p">:</span><span class="s1">&#39;United States of America&#39;</span><span class="p">})</span>
+
+<span class="c1"># Filter Healthy life expectancy</span>
+<span class="n">hale</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">hale</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span>
+        <span class="p">(</span><span class="n">hale</span><span class="p">[</span><span class="s1">&#39;IND_NAME&#39;</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;Healthy life expectancy (at birth)&#39;</span><span class="p">)</span> <span class="o">&amp;</span>
+        <span class="p">(</span><span class="n">hale</span><span class="p">[</span><span class="s1">&#39;DIM_SEX&#39;</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;TOTAL&#39;</span><span class="p">),</span>
+        <span class="p">[</span><span class="s1">&#39;GEO_NAME_SHORT&#39;</span><span class="p">,</span><span class="s1">&#39;DIM_TIME&#39;</span><span class="p">,</span><span class="s1">&#39;AMOUNT_N&#39;</span><span class="p">]</span>
+    <span class="p">]</span>
+    <span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span>
+        <span class="s1">&#39;GEO_NAME_SHORT&#39;</span><span class="p">:</span><span class="s1">&#39;country&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;DIM_TIME&#39;</span><span class="p">:</span><span class="s1">&#39;year&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;AMOUNT_N&#39;</span><span class="p">:</span><span class="s1">&#39;healthy_life_expectancy&#39;</span>
+    <span class="p">})</span>
+<span class="p">)</span>
+
+<span class="c1"># Jaar als int, merge en filter voor 2019 + geselecteerde landen</span>
+<span class="n">co2</span><span class="p">[</span><span class="s1">&#39;year&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">co2</span><span class="p">[</span><span class="s1">&#39;year&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+<span class="n">hale</span><span class="p">[</span><span class="s1">&#39;year&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">hale</span><span class="p">[</span><span class="s1">&#39;year&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+<span class="n">merged</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">co2</span><span class="p">,</span> <span class="n">hale</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;country&#39;</span><span class="p">,</span><span class="s1">&#39;year&#39;</span><span class="p">],</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;inner&#39;</span><span class="p">)</span>
+
+<span class="n">countries</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s1">&#39;United States of America&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;France&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;India&#39;</span>
+<span class="p">]</span>
+
+<span class="n">df2019</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">merged</span>
+    <span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;year == 2019 and country in @countries&quot;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;country&#39;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">countries</span><span class="p">]</span>
+    <span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+<span class="p">)</span>
+
+<span class="c1"># 2) X-waarden en barbreedte</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">countries</span><span class="p">))</span>
+<span class="n">width</span> <span class="o">=</span> <span class="mf">0.4</span>
+
+<span class="c1"># 3) Bouw de interactieve figuur</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">go</span><span class="o">.</span><span class="n">Figure</span><span class="p">()</span>
+
+<span class="c1"># CO₂ per Capita (linker y-as)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">add_trace</span><span class="p">(</span><span class="n">go</span><span class="o">.</span><span class="n">Bar</span><span class="p">(</span>
+    <span class="n">x</span><span class="o">=</span><span class="n">x</span> <span class="o">-</span> <span class="n">width</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span>
+    <span class="n">y</span><span class="o">=</span><span class="n">df2019</span><span class="p">[</span><span class="s1">&#39;co2_per_capita&#39;</span><span class="p">],</span>
+    <span class="n">name</span><span class="o">=</span><span class="s1">&#39;CO₂ per Capita (tons)&#39;</span><span class="p">,</span>
+    <span class="n">marker_color</span><span class="o">=</span><span class="s1">&#39;orange&#39;</span><span class="p">,</span>
+    <span class="n">yaxis</span><span class="o">=</span><span class="s1">&#39;y1&#39;</span><span class="p">,</span>
+    <span class="n">hovertemplate</span><span class="o">=</span><span class="s1">&#39;CO₂: %</span><span class="si">{y}</span><span class="s1"> ton&lt;extra&gt;&lt;/extra&gt;&#39;</span>
+<span class="p">))</span>
+
+<span class="c1"># Healthy Life Expectancy (rechter y-as)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">add_trace</span><span class="p">(</span><span class="n">go</span><span class="o">.</span><span class="n">Bar</span><span class="p">(</span>
+    <span class="n">x</span><span class="o">=</span><span class="n">x</span> <span class="o">+</span> <span class="n">width</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span>
+    <span class="n">y</span><span class="o">=</span><span class="n">df2019</span><span class="p">[</span><span class="s1">&#39;healthy_life_expectancy&#39;</span><span class="p">],</span>
+    <span class="n">name</span><span class="o">=</span><span class="s1">&#39;Healthy Life Expectancy (years)&#39;</span><span class="p">,</span>
+    <span class="n">marker_color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">,</span>
+    <span class="n">yaxis</span><span class="o">=</span><span class="s1">&#39;y2&#39;</span><span class="p">,</span>
+    <span class="n">hovertemplate</span><span class="o">=</span><span class="s1">&#39;Gezonde levensverwachting: %</span><span class="si">{y}</span><span class="s1"> jaar&lt;extra&gt;&lt;/extra&gt;&#39;</span>
+<span class="p">))</span>
+
+<span class="c1"># 4) Layout met dubbele y-as en styling gelijk aan matplotlib</span>
 <span class="n">fig</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
     <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Emissions vs Healthy Life Expectancy: U.S. vs France vs India (2019)&quot;</span><span class="p">,</span>
     <span class="n">xaxis</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
@@ -567,55 +721,57 @@ This perspective expects to see negative correlations or warning signs that poll
     <span class="n">margin</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">t</span><span class="o">=</span><span class="mi">80</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">l</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="mi">60</span><span class="p">)</span>
 <span class="p">)</span>
 
-<span class="c1"># 9) Toon interactieve grafiek</span>
+<span class="c1"># 5) Toon interactieve grafiek</span>
 <span class="n">fig</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="c1"># Optioneel: exporteer naar standalone HTML</span>
+<span class="c1"># fig.write_html(&quot;emissions_health_2019.html&quot;, include_plotlyjs=&#39;cdn&#39;)</span>
 </pre></div>
 </div>
 </div>
-</details>
 <div class="cell_output docutils container">
 <div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
 <span class="ne">ValueError</span><span class="g g-Whitespace">                                </span>Traceback (most recent call last)
-<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">line</span> <span class="mi">76</span>
-<span class="g g-Whitespace">     </span><span class="mi">64</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_trace</span><span class="p">(</span><span class="n">go</span><span class="o">.</span><span class="n">Bar</span><span class="p">(</span>
-<span class="g g-Whitespace">     </span><span class="mi">65</span>     <span class="n">x</span><span class="o">=</span><span class="n">x</span> <span class="o">+</span> <span class="n">width</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span>
-<span class="g g-Whitespace">     </span><span class="mi">66</span>     <span class="n">y</span><span class="o">=</span><span class="n">df3</span><span class="p">[</span><span class="s1">&#39;healthy_life_expectancy&#39;</span><span class="p">],</span>
-   <span class="p">(</span><span class="o">...</span><span class="p">)</span>     <span class="mi">72</span>     <span class="n">yaxis</span><span class="o">=</span><span class="s1">&#39;y2&#39;</span>
-<span class="g g-Whitespace">     </span><span class="mi">73</span> <span class="p">))</span>
-<span class="g g-Whitespace">     </span><span class="mi">75</span> <span class="c1"># 8) Layout met dubbele y-as en styling</span>
-<span class="ne">---&gt; </span><span class="mi">76</span> <span class="n">fig</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
-<span class="g g-Whitespace">     </span><span class="mi">77</span>     <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Emissions vs Healthy Life Expectancy: U.S. vs France vs India (2019)&quot;</span><span class="p">,</span>
-<span class="g g-Whitespace">     </span><span class="mi">78</span>     <span class="n">xaxis</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
-<span class="g g-Whitespace">     </span><span class="mi">79</span>         <span class="n">tickmode</span><span class="o">=</span><span class="s1">&#39;array&#39;</span><span class="p">,</span>
-<span class="g g-Whitespace">     </span><span class="mi">80</span>         <span class="n">tickvals</span><span class="o">=</span><span class="n">x</span><span class="p">,</span>
-<span class="g g-Whitespace">     </span><span class="mi">81</span>         <span class="n">ticktext</span><span class="o">=</span><span class="n">countries</span><span class="p">,</span>
-<span class="g g-Whitespace">     </span><span class="mi">82</span>         <span class="n">tickangle</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span>
-<span class="g g-Whitespace">     </span><span class="mi">83</span>         <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Country&#39;</span>
-<span class="g g-Whitespace">     </span><span class="mi">84</span>     <span class="p">),</span>
-<span class="g g-Whitespace">     </span><span class="mi">85</span>     <span class="n">yaxis</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
-<span class="g g-Whitespace">     </span><span class="mi">86</span>         <span class="n">title</span><span class="o">=</span><span class="s1">&#39;CO₂ per Capita (tons)&#39;</span><span class="p">,</span>
-<span class="g g-Whitespace">     </span><span class="mi">87</span>         <span class="n">titlefont</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;orange&#39;</span><span class="p">),</span>
-<span class="g g-Whitespace">     </span><span class="mi">88</span>         <span class="n">tickfont</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;orange&#39;</span><span class="p">)</span>
-<span class="g g-Whitespace">     </span><span class="mi">89</span>     <span class="p">),</span>
-<span class="g g-Whitespace">     </span><span class="mi">90</span>     <span class="n">yaxis2</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
-<span class="g g-Whitespace">     </span><span class="mi">91</span>         <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Healthy Life Expectancy (years)&#39;</span><span class="p">,</span>
-<span class="g g-Whitespace">     </span><span class="mi">92</span>         <span class="n">titlefont</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">),</span>
-<span class="g g-Whitespace">     </span><span class="mi">93</span>         <span class="n">tickfont</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">),</span>
-<span class="g g-Whitespace">     </span><span class="mi">94</span>         <span class="n">overlaying</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">,</span>
-<span class="g g-Whitespace">     </span><span class="mi">95</span>         <span class="n">side</span><span class="o">=</span><span class="s1">&#39;right&#39;</span>
-<span class="g g-Whitespace">     </span><span class="mi">96</span>     <span class="p">),</span>
-<span class="g g-Whitespace">     </span><span class="mi">97</span>     <span class="n">legend</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
-<span class="g g-Whitespace">     </span><span class="mi">98</span>         <span class="n">orientation</span><span class="o">=</span><span class="s1">&#39;h&#39;</span><span class="p">,</span>
-<span class="g g-Whitespace">     </span><span class="mi">99</span>         <span class="n">yanchor</span><span class="o">=</span><span class="s1">&#39;bottom&#39;</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">100</span>         <span class="n">y</span><span class="o">=</span><span class="mf">1.02</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">101</span>         <span class="n">x</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">102</span>         <span class="n">xanchor</span><span class="o">=</span><span class="s1">&#39;center&#39;</span>
-<span class="g g-Whitespace">    </span><span class="mi">103</span>     <span class="p">),</span>
-<span class="g g-Whitespace">    </span><span class="mi">104</span>     <span class="n">bargap</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">105</span>     <span class="n">margin</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">t</span><span class="o">=</span><span class="mi">80</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">l</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="mi">60</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">106</span> <span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">108</span> <span class="c1"># 9) Toon interactieve grafiek</span>
-<span class="g g-Whitespace">    </span><span class="mi">109</span> <span class="n">fig</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">line</span> <span class="mi">73</span>
+<span class="g g-Whitespace">     </span><span class="mi">63</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_trace</span><span class="p">(</span><span class="n">go</span><span class="o">.</span><span class="n">Bar</span><span class="p">(</span>
+<span class="g g-Whitespace">     </span><span class="mi">64</span>     <span class="n">x</span><span class="o">=</span><span class="n">x</span> <span class="o">+</span> <span class="n">width</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span>
+<span class="g g-Whitespace">     </span><span class="mi">65</span>     <span class="n">y</span><span class="o">=</span><span class="n">df2019</span><span class="p">[</span><span class="s1">&#39;healthy_life_expectancy&#39;</span><span class="p">],</span>
+   <span class="p">(</span><span class="o">...</span><span class="p">)</span>     <span class="mi">69</span>     <span class="n">hovertemplate</span><span class="o">=</span><span class="s1">&#39;Gezonde levensverwachting: %</span><span class="si">{y}</span><span class="s1"> jaar&lt;extra&gt;&lt;/extra&gt;&#39;</span>
+<span class="g g-Whitespace">     </span><span class="mi">70</span> <span class="p">))</span>
+<span class="g g-Whitespace">     </span><span class="mi">72</span> <span class="c1"># 4) Layout met dubbele y-as en styling gelijk aan matplotlib</span>
+<span class="ne">---&gt; </span><span class="mi">73</span> <span class="n">fig</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
+<span class="g g-Whitespace">     </span><span class="mi">74</span>     <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Emissions vs Healthy Life Expectancy: U.S. vs France vs India (2019)&quot;</span><span class="p">,</span>
+<span class="g g-Whitespace">     </span><span class="mi">75</span>     <span class="n">xaxis</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+<span class="g g-Whitespace">     </span><span class="mi">76</span>         <span class="n">tickmode</span><span class="o">=</span><span class="s1">&#39;array&#39;</span><span class="p">,</span>
+<span class="g g-Whitespace">     </span><span class="mi">77</span>         <span class="n">tickvals</span><span class="o">=</span><span class="n">x</span><span class="p">,</span>
+<span class="g g-Whitespace">     </span><span class="mi">78</span>         <span class="n">ticktext</span><span class="o">=</span><span class="n">countries</span><span class="p">,</span>
+<span class="g g-Whitespace">     </span><span class="mi">79</span>         <span class="n">tickangle</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span>
+<span class="g g-Whitespace">     </span><span class="mi">80</span>         <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Country&#39;</span>
+<span class="g g-Whitespace">     </span><span class="mi">81</span>     <span class="p">),</span>
+<span class="g g-Whitespace">     </span><span class="mi">82</span>     <span class="n">yaxis</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+<span class="g g-Whitespace">     </span><span class="mi">83</span>         <span class="n">title</span><span class="o">=</span><span class="s1">&#39;CO₂ per Capita (tons)&#39;</span><span class="p">,</span>
+<span class="g g-Whitespace">     </span><span class="mi">84</span>         <span class="n">titlefont</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;orange&#39;</span><span class="p">),</span>
+<span class="g g-Whitespace">     </span><span class="mi">85</span>         <span class="n">tickfont</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;orange&#39;</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">86</span>     <span class="p">),</span>
+<span class="g g-Whitespace">     </span><span class="mi">87</span>     <span class="n">yaxis2</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+<span class="g g-Whitespace">     </span><span class="mi">88</span>         <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Healthy Life Expectancy (years)&#39;</span><span class="p">,</span>
+<span class="g g-Whitespace">     </span><span class="mi">89</span>         <span class="n">titlefont</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">),</span>
+<span class="g g-Whitespace">     </span><span class="mi">90</span>         <span class="n">tickfont</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">),</span>
+<span class="g g-Whitespace">     </span><span class="mi">91</span>         <span class="n">overlaying</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">,</span>
+<span class="g g-Whitespace">     </span><span class="mi">92</span>         <span class="n">side</span><span class="o">=</span><span class="s1">&#39;right&#39;</span>
+<span class="g g-Whitespace">     </span><span class="mi">93</span>     <span class="p">),</span>
+<span class="g g-Whitespace">     </span><span class="mi">94</span>     <span class="n">legend</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+<span class="g g-Whitespace">     </span><span class="mi">95</span>         <span class="n">orientation</span><span class="o">=</span><span class="s1">&#39;h&#39;</span><span class="p">,</span>
+<span class="g g-Whitespace">     </span><span class="mi">96</span>         <span class="n">yanchor</span><span class="o">=</span><span class="s1">&#39;bottom&#39;</span><span class="p">,</span>
+<span class="g g-Whitespace">     </span><span class="mi">97</span>         <span class="n">y</span><span class="o">=</span><span class="mf">1.02</span><span class="p">,</span>
+<span class="g g-Whitespace">     </span><span class="mi">98</span>         <span class="n">x</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+<span class="g g-Whitespace">     </span><span class="mi">99</span>         <span class="n">xanchor</span><span class="o">=</span><span class="s1">&#39;center&#39;</span>
+<span class="g g-Whitespace">    </span><span class="mi">100</span>     <span class="p">),</span>
+<span class="g g-Whitespace">    </span><span class="mi">101</span>     <span class="n">bargap</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">102</span>     <span class="n">margin</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">t</span><span class="o">=</span><span class="mi">80</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">l</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="mi">60</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">103</span> <span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">105</span> <span class="c1"># 5) Toon interactieve grafiek</span>
+<span class="g g-Whitespace">    </span><span class="mi">106</span> <span class="n">fig</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 
 <span class="nn">File ~\AppData\Local\Programs\Python\Python313\Lib\site-packages\plotly\graph_objs\_figure.py:219,</span> in <span class="ni">Figure.update_layout</span><span class="nt">(self, dict1, overwrite, **kwargs)</span>
 <span class="g g-Whitespace">    </span><span class="mi">193</span> <span class="k">def</span><span class="w"> </span><span class="nf">update_layout</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dict1</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Figure&quot;</span><span class="p">:</span>
@@ -1194,219 +1350,6 @@ This perspective expects to see negative correlations or warning signs that poll
 </div>
 </div>
 </div>
-<p><strong>Caption:</strong> Each point is a country in 2019. We might expect a downward trend if emissions were broadly harming health, but the pattern is not clear-cut. Many high-emission countries (far right) actually enjoy high healthy life expectancy, while low-emission countries (far left) often have low healthy life expectancy. The fitted trendline (from an OLS regression) is nearly flat, indicating no strong linear relationship globally.</p>
-<p><strong>Insight</strong>: At a global level, there is no obvious negative correlation between CO₂ emissions per person and healthy life expectancy. For example, the United States and Gulf countries have some of the highest per-capita CO₂ emissions yet still report healthy life expectancies around 65–70+ years. In contrast, countries with minimal emissions (mostly low-income nations) cluster in the lower-left, with healthy life expectancy often below 60 years. This suggests that factors other than emissions (like economic development) are dominating the health outcomes. However, supporters of Perspective 1 point out that this global view could mask specific health costs of emissions for instance, chronic air pollution in rapidly industrializing countries might be limiting further health gains. The lack of a clear inverse trend here hints that CO₂’s impact on health is indirect and tangled with development rather than a simple one-to-one effect.</p>
-</section>
-<section class="tex2jax_ignore mathjax_ignore" id="visualization-2-emissions-and-health-in-selected-countries-2019">
-<h1>Visualization 2. Emissions and Health in Selected Countries (2019)<a class="headerlink" href="#visualization-2-emissions-and-health-in-selected-countries-2019" title="Link to this heading">#</a></h1>
-<p>– Case comparison of a high emitter vs. a low emitter vs. a moderate emitter.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">plotly.graph_objects</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">go</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-
-<span class="c1"># 1) Data inladen en voorbereiden</span>
-<span class="n">co2</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;owid-co2-data.csv&#39;</span><span class="p">,</span> <span class="n">usecols</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;country&#39;</span><span class="p">,</span><span class="s1">&#39;year&#39;</span><span class="p">,</span><span class="s1">&#39;co2_per_capita&#39;</span><span class="p">])</span>
-<span class="n">hale</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;C64284D_ALL_LATEST.csv&#39;</span><span class="p">)</span>
-
-<span class="c1"># Harmoniseer landnaam</span>
-<span class="n">co2</span><span class="p">[</span><span class="s1">&#39;country&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">co2</span><span class="p">[</span><span class="s1">&#39;country&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">({</span><span class="s1">&#39;United States&#39;</span><span class="p">:</span><span class="s1">&#39;United States of America&#39;</span><span class="p">})</span>
-
-<span class="c1"># Filter Healthy life expectancy</span>
-<span class="n">hale</span> <span class="o">=</span> <span class="p">(</span>
-    <span class="n">hale</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span>
-        <span class="p">(</span><span class="n">hale</span><span class="p">[</span><span class="s1">&#39;IND_NAME&#39;</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;Healthy life expectancy (at birth)&#39;</span><span class="p">)</span> <span class="o">&amp;</span>
-        <span class="p">(</span><span class="n">hale</span><span class="p">[</span><span class="s1">&#39;DIM_SEX&#39;</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;TOTAL&#39;</span><span class="p">),</span>
-        <span class="p">[</span><span class="s1">&#39;GEO_NAME_SHORT&#39;</span><span class="p">,</span><span class="s1">&#39;DIM_TIME&#39;</span><span class="p">,</span><span class="s1">&#39;AMOUNT_N&#39;</span><span class="p">]</span>
-    <span class="p">]</span>
-    <span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span>
-        <span class="s1">&#39;GEO_NAME_SHORT&#39;</span><span class="p">:</span><span class="s1">&#39;country&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;DIM_TIME&#39;</span><span class="p">:</span><span class="s1">&#39;year&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;AMOUNT_N&#39;</span><span class="p">:</span><span class="s1">&#39;healthy_life_expectancy&#39;</span>
-    <span class="p">})</span>
-<span class="p">)</span>
-
-<span class="c1"># Jaar als int, merge en filter voor 2019 + geselecteerde landen</span>
-<span class="n">co2</span><span class="p">[</span><span class="s1">&#39;year&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">co2</span><span class="p">[</span><span class="s1">&#39;year&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
-<span class="n">hale</span><span class="p">[</span><span class="s1">&#39;year&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">hale</span><span class="p">[</span><span class="s1">&#39;year&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
-<span class="n">merged</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">co2</span><span class="p">,</span> <span class="n">hale</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;country&#39;</span><span class="p">,</span><span class="s1">&#39;year&#39;</span><span class="p">],</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;inner&#39;</span><span class="p">)</span>
-
-<span class="n">countries</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s1">&#39;United States of America&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;France&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;India&#39;</span>
-<span class="p">]</span>
-
-<span class="n">df2019</span> <span class="o">=</span> <span class="p">(</span>
-    <span class="n">merged</span>
-    <span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;year == 2019 and country in @countries&quot;</span><span class="p">)</span>
-    <span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;country&#39;</span><span class="p">)</span>
-    <span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">countries</span><span class="p">]</span>
-    <span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
-<span class="p">)</span>
-
-<span class="c1"># 2) X-waarden en barbreedte</span>
-<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">countries</span><span class="p">))</span>
-<span class="n">width</span> <span class="o">=</span> <span class="mf">0.4</span>
-
-<span class="c1"># 3) Bouw de interactieve figuur</span>
-<span class="n">fig</span> <span class="o">=</span> <span class="n">go</span><span class="o">.</span><span class="n">Figure</span><span class="p">()</span>
-
-<span class="c1"># CO₂ per Capita (linker y-as)</span>
-<span class="n">fig</span><span class="o">.</span><span class="n">add_trace</span><span class="p">(</span><span class="n">go</span><span class="o">.</span><span class="n">Bar</span><span class="p">(</span>
-    <span class="n">x</span><span class="o">=</span><span class="n">x</span> <span class="o">-</span> <span class="n">width</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span>
-    <span class="n">y</span><span class="o">=</span><span class="n">df2019</span><span class="p">[</span><span class="s1">&#39;co2_per_capita&#39;</span><span class="p">],</span>
-    <span class="n">name</span><span class="o">=</span><span class="s1">&#39;CO₂ per Capita (tons)&#39;</span><span class="p">,</span>
-    <span class="n">marker_color</span><span class="o">=</span><span class="s1">&#39;orange&#39;</span><span class="p">,</span>
-    <span class="n">yaxis</span><span class="o">=</span><span class="s1">&#39;y1&#39;</span><span class="p">,</span>
-    <span class="n">hovertemplate</span><span class="o">=</span><span class="s1">&#39;CO₂: %</span><span class="si">{y}</span><span class="s1"> ton&lt;extra&gt;&lt;/extra&gt;&#39;</span>
-<span class="p">))</span>
-
-<span class="c1"># Healthy Life Expectancy (rechter y-as)</span>
-<span class="n">fig</span><span class="o">.</span><span class="n">add_trace</span><span class="p">(</span><span class="n">go</span><span class="o">.</span><span class="n">Bar</span><span class="p">(</span>
-    <span class="n">x</span><span class="o">=</span><span class="n">x</span> <span class="o">+</span> <span class="n">width</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span>
-    <span class="n">y</span><span class="o">=</span><span class="n">df2019</span><span class="p">[</span><span class="s1">&#39;healthy_life_expectancy&#39;</span><span class="p">],</span>
-    <span class="n">name</span><span class="o">=</span><span class="s1">&#39;Healthy Life Expectancy (years)&#39;</span><span class="p">,</span>
-    <span class="n">marker_color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">,</span>
-    <span class="n">yaxis</span><span class="o">=</span><span class="s1">&#39;y2&#39;</span><span class="p">,</span>
-    <span class="n">hovertemplate</span><span class="o">=</span><span class="s1">&#39;Gezonde levensverwachting: %</span><span class="si">{y}</span><span class="s1"> jaar&lt;extra&gt;&lt;/extra&gt;&#39;</span>
-<span class="p">))</span>
-
-<span class="c1"># 4) Layout met dubbele y-as en styling gelijk aan matplotlib</span>
-<span class="n">fig</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
-    <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Emissions vs Healthy Life Expectancy: U.S. vs France vs India (2019)&quot;</span><span class="p">,</span>
-    <span class="n">xaxis</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
-        <span class="n">tickmode</span><span class="o">=</span><span class="s1">&#39;array&#39;</span><span class="p">,</span>
-        <span class="n">tickvals</span><span class="o">=</span><span class="n">x</span><span class="p">,</span>
-        <span class="n">ticktext</span><span class="o">=</span><span class="n">countries</span><span class="p">,</span>
-        <span class="n">tickangle</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span>
-        <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Country&#39;</span>
-    <span class="p">),</span>
-    <span class="n">yaxis</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
-        <span class="n">title</span><span class="o">=</span><span class="s1">&#39;CO₂ per Capita (tons)&#39;</span><span class="p">,</span>
-        <span class="n">titlefont</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;orange&#39;</span><span class="p">),</span>
-        <span class="n">tickfont</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;orange&#39;</span><span class="p">)</span>
-    <span class="p">),</span>
-    <span class="n">yaxis2</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
-        <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Healthy Life Expectancy (years)&#39;</span><span class="p">,</span>
-        <span class="n">titlefont</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">),</span>
-        <span class="n">tickfont</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">),</span>
-        <span class="n">overlaying</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">,</span>
-        <span class="n">side</span><span class="o">=</span><span class="s1">&#39;right&#39;</span>
-    <span class="p">),</span>
-    <span class="n">legend</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
-        <span class="n">orientation</span><span class="o">=</span><span class="s1">&#39;h&#39;</span><span class="p">,</span>
-        <span class="n">yanchor</span><span class="o">=</span><span class="s1">&#39;bottom&#39;</span><span class="p">,</span>
-        <span class="n">y</span><span class="o">=</span><span class="mf">1.02</span><span class="p">,</span>
-        <span class="n">x</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
-        <span class="n">xanchor</span><span class="o">=</span><span class="s1">&#39;center&#39;</span>
-    <span class="p">),</span>
-    <span class="n">bargap</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>
-    <span class="n">margin</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">t</span><span class="o">=</span><span class="mi">80</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">l</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="mi">60</span><span class="p">)</span>
-<span class="p">)</span>
-
-<span class="c1"># 5) Toon interactieve grafiek</span>
-<span class="n">fig</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-
-<span class="c1"># Optioneel: exporteer naar standalone HTML</span>
-<span class="c1"># fig.write_html(&quot;emissions_health_2019.html&quot;, include_plotlyjs=&#39;cdn&#39;)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="n">notebook</span> <span class="n">controller</span> <span class="ow">is</span> <span class="n">DISPOSED</span><span class="o">.</span> 
-
-<span class="n">View</span> <span class="n">Jupyter</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;command:jupyter.viewOutput&#39;</span><span class="o">&gt;</span><span class="n">log</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span> <span class="k">for</span> <span class="n">further</span> <span class="n">details</span><span class="o">.</span>
-</pre></div>
-</div>
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="n">notebook</span> <span class="n">controller</span> <span class="ow">is</span> <span class="n">DISPOSED</span><span class="o">.</span> 
-
-<span class="n">View</span> <span class="n">Jupyter</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;command:jupyter.viewOutput&#39;</span><span class="o">&gt;</span><span class="n">log</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span> <span class="k">for</span> <span class="n">further</span> <span class="n">details</span><span class="o">.</span>
-</pre></div>
-</div>
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="n">notebook</span> <span class="n">controller</span> <span class="ow">is</span> <span class="n">DISPOSED</span><span class="o">.</span> 
-
-<span class="n">View</span> <span class="n">Jupyter</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;command:jupyter.viewOutput&#39;</span><span class="o">&gt;</span><span class="n">log</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span> <span class="k">for</span> <span class="n">further</span> <span class="n">details</span><span class="o">.</span>
-</pre></div>
-</div>
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="n">notebook</span> <span class="n">controller</span> <span class="ow">is</span> <span class="n">DISPOSED</span><span class="o">.</span> 
-
-<span class="n">View</span> <span class="n">Jupyter</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;command:jupyter.viewOutput&#39;</span><span class="o">&gt;</span><span class="n">log</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span> <span class="k">for</span> <span class="n">further</span> <span class="n">details</span><span class="o">.</span>
-</pre></div>
-</div>
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="n">notebook</span> <span class="n">controller</span> <span class="ow">is</span> <span class="n">DISPOSED</span><span class="o">.</span> 
-
-<span class="n">View</span> <span class="n">Jupyter</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;command:jupyter.viewOutput&#39;</span><span class="o">&gt;</span><span class="n">log</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span> <span class="k">for</span> <span class="n">further</span> <span class="n">details</span><span class="o">.</span>
-</pre></div>
-</div>
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="n">notebook</span> <span class="n">controller</span> <span class="ow">is</span> <span class="n">DISPOSED</span><span class="o">.</span> 
-
-<span class="n">View</span> <span class="n">Jupyter</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;command:jupyter.viewOutput&#39;</span><span class="o">&gt;</span><span class="n">log</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span> <span class="k">for</span> <span class="n">further</span> <span class="n">details</span><span class="o">.</span>
-</pre></div>
-</div>
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="n">notebook</span> <span class="n">controller</span> <span class="ow">is</span> <span class="n">DISPOSED</span><span class="o">.</span> 
-
-<span class="n">View</span> <span class="n">Jupyter</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;command:jupyter.viewOutput&#39;</span><span class="o">&gt;</span><span class="n">log</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span> <span class="k">for</span> <span class="n">further</span> <span class="n">details</span><span class="o">.</span>
-</pre></div>
-</div>
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="n">notebook</span> <span class="n">controller</span> <span class="ow">is</span> <span class="n">DISPOSED</span><span class="o">.</span> 
-
-<span class="n">View</span> <span class="n">Jupyter</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;command:jupyter.viewOutput&#39;</span><span class="o">&gt;</span><span class="n">log</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span> <span class="k">for</span> <span class="n">further</span> <span class="n">details</span><span class="o">.</span>
-</pre></div>
-</div>
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="n">notebook</span> <span class="n">controller</span> <span class="ow">is</span> <span class="n">DISPOSED</span><span class="o">.</span> 
-
-<span class="n">View</span> <span class="n">Jupyter</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;command:jupyter.viewOutput&#39;</span><span class="o">&gt;</span><span class="n">log</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span> <span class="k">for</span> <span class="n">further</span> <span class="n">details</span><span class="o">.</span>
-</pre></div>
-</div>
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="n">notebook</span> <span class="n">controller</span> <span class="ow">is</span> <span class="n">DISPOSED</span><span class="o">.</span> 
-
-<span class="n">View</span> <span class="n">Jupyter</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;command:jupyter.viewOutput&#39;</span><span class="o">&gt;</span><span class="n">log</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span> <span class="k">for</span> <span class="n">further</span> <span class="n">details</span><span class="o">.</span>
-</pre></div>
-</div>
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="n">notebook</span> <span class="n">controller</span> <span class="ow">is</span> <span class="n">DISPOSED</span><span class="o">.</span> 
-
-<span class="n">View</span> <span class="n">Jupyter</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;command:jupyter.viewOutput&#39;</span><span class="o">&gt;</span><span class="n">log</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span> <span class="k">for</span> <span class="n">further</span> <span class="n">details</span><span class="o">.</span>
-</pre></div>
-</div>
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="n">notebook</span> <span class="n">controller</span> <span class="ow">is</span> <span class="n">DISPOSED</span><span class="o">.</span> 
-
-<span class="n">View</span> <span class="n">Jupyter</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;command:jupyter.viewOutput&#39;</span><span class="o">&gt;</span><span class="n">log</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span> <span class="k">for</span> <span class="n">further</span> <span class="n">details</span><span class="o">.</span>
-</pre></div>
-</div>
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="n">notebook</span> <span class="n">controller</span> <span class="ow">is</span> <span class="n">DISPOSED</span><span class="o">.</span> 
-
-<span class="n">View</span> <span class="n">Jupyter</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;command:jupyter.viewOutput&#39;</span><span class="o">&gt;</span><span class="n">log</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span> <span class="k">for</span> <span class="n">further</span> <span class="n">details</span><span class="o">.</span>
-</pre></div>
-</div>
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="n">notebook</span> <span class="n">controller</span> <span class="ow">is</span> <span class="n">DISPOSED</span><span class="o">.</span> 
-
-<span class="n">View</span> <span class="n">Jupyter</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;command:jupyter.viewOutput&#39;</span><span class="o">&gt;</span><span class="n">log</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span> <span class="k">for</span> <span class="n">further</span> <span class="n">details</span><span class="o">.</span>
-</pre></div>
-</div>
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="n">notebook</span> <span class="n">controller</span> <span class="ow">is</span> <span class="n">DISPOSED</span><span class="o">.</span> 
-
-<span class="n">View</span> <span class="n">Jupyter</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;command:jupyter.viewOutput&#39;</span><span class="o">&gt;</span><span class="n">log</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span> <span class="k">for</span> <span class="n">further</span> <span class="n">details</span><span class="o">.</span>
-</pre></div>
-</div>
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="n">notebook</span> <span class="n">controller</span> <span class="ow">is</span> <span class="n">DISPOSED</span><span class="o">.</span> 
-
-<span class="n">View</span> <span class="n">Jupyter</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;command:jupyter.viewOutput&#39;</span><span class="o">&gt;</span><span class="n">log</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span> <span class="k">for</span> <span class="n">further</span> <span class="n">details</span><span class="o">.</span>
-</pre></div>
-</div>
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="n">notebook</span> <span class="n">controller</span> <span class="ow">is</span> <span class="n">DISPOSED</span><span class="o">.</span> 
-
-<span class="n">View</span> <span class="n">Jupyter</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;command:jupyter.viewOutput&#39;</span><span class="o">&gt;</span><span class="n">log</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span> <span class="k">for</span> <span class="n">further</span> <span class="n">details</span><span class="o">.</span>
-</pre></div>
-</div>
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="n">notebook</span> <span class="n">controller</span> <span class="ow">is</span> <span class="n">DISPOSED</span><span class="o">.</span> 
-
-<span class="n">View</span> <span class="n">Jupyter</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;command:jupyter.viewOutput&#39;</span><span class="o">&gt;</span><span class="n">log</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span> <span class="k">for</span> <span class="n">further</span> <span class="n">details</span><span class="o">.</span>
-</pre></div>
-</div>
-</div>
-</div>
 <p><strong>Caption:</strong> This bar chart contrasts CO₂ emissions per capita (left axis, orange bars) with healthy life expectancy (right axis, blue bars) for three example countries in 2019. The United States emits far more CO₂ per person (≈15 tons) than France (≈5 tons) or India (&lt;2 tons). Yet, Americans have a shorter healthy life expectancy (~66 years) than the French (~72 years). Indians have a much lower healthy lifespan (~60 years) alongside very low emissions.</p>
 <p><strong>Insight:</strong> The comparison highlights that more emissions do not guarantee better health. The U.S. vs France gap is telling: Americans emit about 3× more CO₂ per capita, but enjoy roughly 6 fewer healthy years on average than the French. This could be due to
 pollution or other lifestyle and healthcare differences, perspective 1 would note that high emissions (often accompanied by pollution and greenhouse effects) might be undermining health in the U.S., which struggles with issues like air quality and chronic disease. Meanwhile, India shows the opposite extreme: very low emissions come with low healthy life expectancy, primarily due to poverty and limited healthcare. While India’s low emissions are not causing poor health (rather, they reflect less industrial development), perspective 1 advocates worry that as India’s emissions rise, environmental health burdens (e.g. smog in cities) could further challenge its progress. This case study suggests that beyond a certain point, increasing emissions is associated with diminishing health returns, France achieves higher health with lower emissions than the U.S.,aligning with the idea that cleaner development paths might support longer healthy lives.</p>
@@ -1494,6 +1437,11 @@ pollution or other lifestyle and healthcare differences, perspective 1 would not
 </div>
 </details>
 <div class="cell_output docutils container">
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="n">notebook</span> <span class="n">controller</span> <span class="ow">is</span> <span class="n">DISPOSED</span><span class="o">.</span> 
+
+<span class="n">View</span> <span class="n">Jupyter</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;command:jupyter.viewOutput&#39;</span><span class="o">&gt;</span><span class="n">log</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span> <span class="k">for</span> <span class="n">further</span> <span class="n">details</span><span class="o">.</span>
+</pre></div>
+</div>
 <div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="n">notebook</span> <span class="n">controller</span> <span class="ow">is</span> <span class="n">DISPOSED</span><span class="o">.</span> 
 
 <span class="n">View</span> <span class="n">Jupyter</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;command:jupyter.viewOutput&#39;</span><span class="o">&gt;</span><span class="n">log</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span> <span class="k">for</span> <span class="n">further</span> <span class="n">details</span><span class="o">.</span>

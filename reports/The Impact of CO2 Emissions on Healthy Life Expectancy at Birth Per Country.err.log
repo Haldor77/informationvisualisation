@@ -37,18 +37,17 @@ Traceback (most recent call last):
 nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
 ------------------
 import pandas as pd
-import numpy as np
 import plotly.graph_objects as go
-import plotly.io as pio
+import numpy as np
 
-# 0) Renderer instellen voor inline weergave (kies naar behoefte)
-pio.renderers.default = "notebook_connected"  # werkt vaak in Jupyter Notebook
-
-# 1) Data inladen
+# 1) Data inladen en voorbereiden
 co2 = pd.read_csv('owid-co2-data.csv', usecols=['country','year','co2_per_capita'])
 hale = pd.read_csv('C64284D_ALL_LATEST.csv')
 
-# 2) Healthy life expectancy filter & renamen
+# Harmoniseer landnaam
+co2['country'] = co2['country'].replace({'United States':'United States of America'})
+
+# Filter Healthy life expectancy
 hale = (
     hale.loc[
         (hale['IND_NAME']=='Healthy life expectancy (at birth)') &
@@ -62,55 +61,53 @@ hale = (
     })
 )
 
-# 3) Jaar als int
-co2['year']  = co2['year'].astype(int)
+# Jaar als int, merge en filter voor 2019 + geselecteerde landen
+co2['year'] = co2['year'].astype(int)
 hale['year'] = hale['year'].astype(int)
-
-# 4) Harmoniseer landnaam en merge voor 2019
-co2['country'] = co2['country'].replace({'United States':'United States of America'})
 merged = pd.merge(co2, hale, on=['country','year'], how='inner')
-df2019 = merged[merged['year']==2019].dropna(subset=['co2_per_capita','healthy_life_expectancy'])
 
-# 5) Specifieke landen in de juiste volgorde
 countries = [
-    'United States of America',  # hoge emitter
-    'France',                     # gemiddelde emitter
-    'India'                       # lage emitter
+    'United States of America',
+    'France',
+    'India'
 ]
-df3 = df2019.set_index('country').loc[countries]
 
-# 6) X-positie en barbreedte
+df2019 = (
+    merged
+    .query("year == 2019 and country in @countries")
+    .set_index('country')
+    .loc[countries]
+    .reset_index()
+)
+
+# 2) X-waarden en barbreedte
 x = np.arange(len(countries))
-width = 0.35
+width = 0.4
 
-# 7) Bouw de interactieve figuur
+# 3) Bouw de interactieve figuur
 fig = go.Figure()
 
 # CO₂ per Capita (linker y-as)
 fig.add_trace(go.Bar(
     x=x - width/2,
-    y=df3['co2_per_capita'],
+    y=df2019['co2_per_capita'],
     name='CO₂ per Capita (tons)',
-    marker_line_width=1,
-    marker_line_color='black',
     marker_color='orange',
-    hovertemplate='CO₂: %{y:.2f} ton<extra></extra>',
-    yaxis='y1'
+    yaxis='y1',
+    hovertemplate='CO₂: %{y} ton<extra></extra>'
 ))
 
 # Healthy Life Expectancy (rechter y-as)
 fig.add_trace(go.Bar(
     x=x + width/2,
-    y=df3['healthy_life_expectancy'],
+    y=df2019['healthy_life_expectancy'],
     name='Healthy Life Expectancy (years)',
-    marker_line_width=1,
-    marker_line_color='black',
     marker_color='blue',
-    hovertemplate='Gezonde levensverwachting: %{y:.1f} jaar<extra></extra>',
-    yaxis='y2'
+    yaxis='y2',
+    hovertemplate='Gezonde levensverwachting: %{y} jaar<extra></extra>'
 ))
 
-# 8) Layout met dubbele y-as en styling
+# 4) Layout met dubbele y-as en styling gelijk aan matplotlib
 fig.update_layout(
     title="Emissions vs Healthy Life Expectancy: U.S. vs France vs India (2019)",
     xaxis=dict(
@@ -143,54 +140,58 @@ fig.update_layout(
     margin=dict(t=80, b=50, l=60, r=60)
 )
 
-# 9) Toon interactieve grafiek
+# 5) Toon interactieve grafiek
 fig.show()
+
+# Optioneel: exporteer naar standalone HTML
+# fig.write_html("emissions_health_2019.html", include_plotlyjs='cdn')
+
 
 ------------------
 
 
 [31m---------------------------------------------------------------------------[39m
 [31mValueError[39m                                Traceback (most recent call last)
-[36mCell[39m[36m [39m[32mIn[1][39m[32m, line 76[39m
-[32m     64[39m fig.add_trace(go.Bar(
-[32m     65[39m     x=x + width/[32m2[39m,
-[32m     66[39m     y=df3[[33m'[39m[33mhealthy_life_expectancy[39m[33m'[39m],
-[32m   (...)[39m[32m     72[39m     yaxis=[33m'[39m[33my2[39m[33m'[39m
-[32m     73[39m ))
-[32m     75[39m [38;5;66;03m# 8) Layout met dubbele y-as en styling[39;00m
-[32m---> [39m[32m76[39m [43mfig[49m[43m.[49m[43mupdate_layout[49m[43m([49m
-[32m     77[39m [43m    [49m[43mtitle[49m[43m=[49m[33;43m"[39;49m[33;43mEmissions vs Healthy Life Expectancy: U.S. vs France vs India (2019)[39;49m[33;43m"[39;49m[43m,[49m
-[32m     78[39m [43m    [49m[43mxaxis[49m[43m=[49m[38;5;28;43mdict[39;49m[43m([49m
-[32m     79[39m [43m        [49m[43mtickmode[49m[43m=[49m[33;43m'[39;49m[33;43marray[39;49m[33;43m'[39;49m[43m,[49m
-[32m     80[39m [43m        [49m[43mtickvals[49m[43m=[49m[43mx[49m[43m,[49m
-[32m     81[39m [43m        [49m[43mticktext[49m[43m=[49m[43mcountries[49m[43m,[49m
-[32m     82[39m [43m        [49m[43mtickangle[49m[43m=[49m[32;43m15[39;49m[43m,[49m
-[32m     83[39m [43m        [49m[43mtitle[49m[43m=[49m[33;43m'[39;49m[33;43mCountry[39;49m[33;43m'[39;49m
-[32m     84[39m [43m    [49m[43m)[49m[43m,[49m
-[32m     85[39m [43m    [49m[43myaxis[49m[43m=[49m[38;5;28;43mdict[39;49m[43m([49m
-[32m     86[39m [43m        [49m[43mtitle[49m[43m=[49m[33;43m'[39;49m[33;43mCO₂ per Capita (tons)[39;49m[33;43m'[39;49m[43m,[49m
-[32m     87[39m [43m        [49m[43mtitlefont[49m[43m=[49m[38;5;28;43mdict[39;49m[43m([49m[43mcolor[49m[43m=[49m[33;43m'[39;49m[33;43morange[39;49m[33;43m'[39;49m[43m)[49m[43m,[49m
-[32m     88[39m [43m        [49m[43mtickfont[49m[43m=[49m[38;5;28;43mdict[39;49m[43m([49m[43mcolor[49m[43m=[49m[33;43m'[39;49m[33;43morange[39;49m[33;43m'[39;49m[43m)[49m
-[32m     89[39m [43m    [49m[43m)[49m[43m,[49m
-[32m     90[39m [43m    [49m[43myaxis2[49m[43m=[49m[38;5;28;43mdict[39;49m[43m([49m
-[32m     91[39m [43m        [49m[43mtitle[49m[43m=[49m[33;43m'[39;49m[33;43mHealthy Life Expectancy (years)[39;49m[33;43m'[39;49m[43m,[49m
-[32m     92[39m [43m        [49m[43mtitlefont[49m[43m=[49m[38;5;28;43mdict[39;49m[43m([49m[43mcolor[49m[43m=[49m[33;43m'[39;49m[33;43mblue[39;49m[33;43m'[39;49m[43m)[49m[43m,[49m
-[32m     93[39m [43m        [49m[43mtickfont[49m[43m=[49m[38;5;28;43mdict[39;49m[43m([49m[43mcolor[49m[43m=[49m[33;43m'[39;49m[33;43mblue[39;49m[33;43m'[39;49m[43m)[49m[43m,[49m
-[32m     94[39m [43m        [49m[43moverlaying[49m[43m=[49m[33;43m'[39;49m[33;43my[39;49m[33;43m'[39;49m[43m,[49m
-[32m     95[39m [43m        [49m[43mside[49m[43m=[49m[33;43m'[39;49m[33;43mright[39;49m[33;43m'[39;49m
-[32m     96[39m [43m    [49m[43m)[49m[43m,[49m
-[32m     97[39m [43m    [49m[43mlegend[49m[43m=[49m[38;5;28;43mdict[39;49m[43m([49m
-[32m     98[39m [43m        [49m[43morientation[49m[43m=[49m[33;43m'[39;49m[33;43mh[39;49m[33;43m'[39;49m[43m,[49m
-[32m     99[39m [43m        [49m[43myanchor[49m[43m=[49m[33;43m'[39;49m[33;43mbottom[39;49m[33;43m'[39;49m[43m,[49m
-[32m    100[39m [43m        [49m[43my[49m[43m=[49m[32;43m1.02[39;49m[43m,[49m
-[32m    101[39m [43m        [49m[43mx[49m[43m=[49m[32;43m0.5[39;49m[43m,[49m
-[32m    102[39m [43m        [49m[43mxanchor[49m[43m=[49m[33;43m'[39;49m[33;43mcenter[39;49m[33;43m'[39;49m
-[32m    103[39m [43m    [49m[43m)[49m[43m,[49m
-[32m    104[39m [43m    [49m[43mbargap[49m[43m=[49m[32;43m0.2[39;49m[43m,[49m
-[32m    105[39m [43m    [49m[43mmargin[49m[43m=[49m[38;5;28;43mdict[39;49m[43m([49m[43mt[49m[43m=[49m[32;43m80[39;49m[43m,[49m[43m [49m[43mb[49m[43m=[49m[32;43m50[39;49m[43m,[49m[43m [49m[43ml[49m[43m=[49m[32;43m60[39;49m[43m,[49m[43m [49m[43mr[49m[43m=[49m[32;43m60[39;49m[43m)[49m
-[32m    106[39m [43m)[49m
-[32m    108[39m [38;5;66;03m# 9) Toon interactieve grafiek[39;00m
-[32m    109[39m fig.show()
+[36mCell[39m[36m [39m[32mIn[2][39m[32m, line 73[39m
+[32m     63[39m fig.add_trace(go.Bar(
+[32m     64[39m     x=x + width/[32m2[39m,
+[32m     65[39m     y=df2019[[33m'[39m[33mhealthy_life_expectancy[39m[33m'[39m],
+[32m   (...)[39m[32m     69[39m     hovertemplate=[33m'[39m[33mGezonde levensverwachting: [39m[33m%[39m[38;5;132;01m{y}[39;00m[33m jaar<extra></extra>[39m[33m'[39m
+[32m     70[39m ))
+[32m     72[39m [38;5;66;03m# 4) Layout met dubbele y-as en styling gelijk aan matplotlib[39;00m
+[32m---> [39m[32m73[39m [43mfig[49m[43m.[49m[43mupdate_layout[49m[43m([49m
+[32m     74[39m [43m    [49m[43mtitle[49m[43m=[49m[33;43m"[39;49m[33;43mEmissions vs Healthy Life Expectancy: U.S. vs France vs India (2019)[39;49m[33;43m"[39;49m[43m,[49m
+[32m     75[39m [43m    [49m[43mxaxis[49m[43m=[49m[38;5;28;43mdict[39;49m[43m([49m
+[32m     76[39m [43m        [49m[43mtickmode[49m[43m=[49m[33;43m'[39;49m[33;43marray[39;49m[33;43m'[39;49m[43m,[49m
+[32m     77[39m [43m        [49m[43mtickvals[49m[43m=[49m[43mx[49m[43m,[49m
+[32m     78[39m [43m        [49m[43mticktext[49m[43m=[49m[43mcountries[49m[43m,[49m
+[32m     79[39m [43m        [49m[43mtickangle[49m[43m=[49m[32;43m15[39;49m[43m,[49m
+[32m     80[39m [43m        [49m[43mtitle[49m[43m=[49m[33;43m'[39;49m[33;43mCountry[39;49m[33;43m'[39;49m
+[32m     81[39m [43m    [49m[43m)[49m[43m,[49m
+[32m     82[39m [43m    [49m[43myaxis[49m[43m=[49m[38;5;28;43mdict[39;49m[43m([49m
+[32m     83[39m [43m        [49m[43mtitle[49m[43m=[49m[33;43m'[39;49m[33;43mCO₂ per Capita (tons)[39;49m[33;43m'[39;49m[43m,[49m
+[32m     84[39m [43m        [49m[43mtitlefont[49m[43m=[49m[38;5;28;43mdict[39;49m[43m([49m[43mcolor[49m[43m=[49m[33;43m'[39;49m[33;43morange[39;49m[33;43m'[39;49m[43m)[49m[43m,[49m
+[32m     85[39m [43m        [49m[43mtickfont[49m[43m=[49m[38;5;28;43mdict[39;49m[43m([49m[43mcolor[49m[43m=[49m[33;43m'[39;49m[33;43morange[39;49m[33;43m'[39;49m[43m)[49m
+[32m     86[39m [43m    [49m[43m)[49m[43m,[49m
+[32m     87[39m [43m    [49m[43myaxis2[49m[43m=[49m[38;5;28;43mdict[39;49m[43m([49m
+[32m     88[39m [43m        [49m[43mtitle[49m[43m=[49m[33;43m'[39;49m[33;43mHealthy Life Expectancy (years)[39;49m[33;43m'[39;49m[43m,[49m
+[32m     89[39m [43m        [49m[43mtitlefont[49m[43m=[49m[38;5;28;43mdict[39;49m[43m([49m[43mcolor[49m[43m=[49m[33;43m'[39;49m[33;43mblue[39;49m[33;43m'[39;49m[43m)[49m[43m,[49m
+[32m     90[39m [43m        [49m[43mtickfont[49m[43m=[49m[38;5;28;43mdict[39;49m[43m([49m[43mcolor[49m[43m=[49m[33;43m'[39;49m[33;43mblue[39;49m[33;43m'[39;49m[43m)[49m[43m,[49m
+[32m     91[39m [43m        [49m[43moverlaying[49m[43m=[49m[33;43m'[39;49m[33;43my[39;49m[33;43m'[39;49m[43m,[49m
+[32m     92[39m [43m        [49m[43mside[49m[43m=[49m[33;43m'[39;49m[33;43mright[39;49m[33;43m'[39;49m
+[32m     93[39m [43m    [49m[43m)[49m[43m,[49m
+[32m     94[39m [43m    [49m[43mlegend[49m[43m=[49m[38;5;28;43mdict[39;49m[43m([49m
+[32m     95[39m [43m        [49m[43morientation[49m[43m=[49m[33;43m'[39;49m[33;43mh[39;49m[33;43m'[39;49m[43m,[49m
+[32m     96[39m [43m        [49m[43myanchor[49m[43m=[49m[33;43m'[39;49m[33;43mbottom[39;49m[33;43m'[39;49m[43m,[49m
+[32m     97[39m [43m        [49m[43my[49m[43m=[49m[32;43m1.02[39;49m[43m,[49m
+[32m     98[39m [43m        [49m[43mx[49m[43m=[49m[32;43m0.5[39;49m[43m,[49m
+[32m     99[39m [43m        [49m[43mxanchor[49m[43m=[49m[33;43m'[39;49m[33;43mcenter[39;49m[33;43m'[39;49m
+[32m    100[39m [43m    [49m[43m)[49m[43m,[49m
+[32m    101[39m [43m    [49m[43mbargap[49m[43m=[49m[32;43m0.2[39;49m[43m,[49m
+[32m    102[39m [43m    [49m[43mmargin[49m[43m=[49m[38;5;28;43mdict[39;49m[43m([49m[43mt[49m[43m=[49m[32;43m80[39;49m[43m,[49m[43m [49m[43mb[49m[43m=[49m[32;43m50[39;49m[43m,[49m[43m [49m[43ml[49m[43m=[49m[32;43m60[39;49m[43m,[49m[43m [49m[43mr[49m[43m=[49m[32;43m60[39;49m[43m)[49m
+[32m    103[39m [43m)[49m
+[32m    105[39m [38;5;66;03m# 5) Toon interactieve grafiek[39;00m
+[32m    106[39m fig.show()
 
 [36mFile [39m[32m~\AppData\Local\Programs\Python\Python313\Lib\site-packages\plotly\graph_objs\_figure.py:219[39m, in [36mFigure.update_layout[39m[34m(self, dict1, overwrite, **kwargs)[39m
 [32m    193[39m [38;5;28;01mdef[39;00m[38;5;250m [39m[34mupdate_layout[39m([38;5;28mself[39m, dict1=[38;5;28;01mNone[39;00m, overwrite=[38;5;28;01mFalse[39;00m, **kwargs) -> [33m"[39m[33mFigure[39m[33m"[39m:
