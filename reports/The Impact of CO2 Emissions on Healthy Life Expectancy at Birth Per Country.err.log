@@ -36,60 +36,39 @@ Traceback (most recent call last):
     raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
 nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
 ------------------
-# … (your data‐prep code stays the same) …
+import plotly.express as px
 
-# 5) Build interactive Plotly figure with custom hovertemplate
-fig = go.Figure()
-
-# Country data points, now with customdata for the country names
-fig.add_trace(go.Scatter(
-    x=x, y=y, mode='markers',
-    name='Landdata',
-    marker=dict(size=6, opacity=0.7, line=dict(width=0.5, color='black')),
-    customdata=df2019['country'],                        # voeg country toe
-    hovertemplate=
-        '<b>%{customdata}</b><br>'                       # toon land
-        'CO₂: %{x:.2f} ton<br>'                          # toon CO₂
-        'HALE: %{y:.1f} jaar<extra></extra>'             # toon levensverwachting
-))
-
-# Trendline (legend only, no hovertemplate needed)
-fig.add_trace(go.Scatter(
-    x=line_x, y=line_y, mode='lines',
-    name=f'Trendline (R²={r_value**2:.2f})',
-    line=dict(dash='dash', color='red'),
-    hoverinfo='skip'                                     # geen hover voor de lijn
-))
-
-# 6) Layout styling
-fig.update_layout(
-    title='CO₂ per Capita vs Healthy Life Expectancy (2019)',
-    xaxis_title='CO₂ per Capita (tons)',
-    yaxis_title='Healthy Life Expectancy (years)',
-    hovermode='closest'
+# World map with CO2 per capita and Healthy Life Expectancy
+fig = px.scatter_geo(
+    merged_df[merged_df['year'] == 2019],
+    locations='iso_code',
+    color='healthy_life_expectancy_at_birth',
+    size='co2_per_capita',
+    color_continuous_scale='Viridis',
+    hover_name='country',
+    title='Healthy Life Expectancy (color) and CO₂ Emissions per Capita (size) in 2019'
 )
 
-# Render inline as before
-html_snippet = fig.to_html(include_plotlyjs='cdn', full_html=False)
-from IPython.display import HTML, display
-display(HTML(html_snippet))
+fig.show()
 
 ------------------
 
 
 [31m---------------------------------------------------------------------------[39m
 [31mNameError[39m                                 Traceback (most recent call last)
-[36mCell[39m[36m [39m[32mIn[1][39m[32m, line 4[39m
-[32m      1[39m [38;5;66;03m# … (your data‐prep code stays the same) …[39;00m
-[32m      2[39m 
-[32m      3[39m [38;5;66;03m# 5) Build interactive Plotly figure with custom hovertemplate[39;00m
-[32m----> [39m[32m4[39m fig = [43mgo[49m.Figure()
-[32m      6[39m [38;5;66;03m# Country data points, now with customdata for the country names[39;00m
-[32m      7[39m fig.add_trace(go.Scatter(
-[32m      8[39m     x=x, y=y, mode=[33m'[39m[33mmarkers[39m[33m'[39m,
-[32m      9[39m     name=[33m'[39m[33mLanddata[39m[33m'[39m,
-[32m   (...)[39m[32m     15[39m         [33m'[39m[33mHALE: [39m[33m%[39m[38;5;132;01m{y:.1f}[39;00m[33m jaar<extra></extra>[39m[33m'[39m             [38;5;66;03m# toon levensverwachting[39;00m
-[32m     16[39m ))
+[36mCell[39m[36m [39m[32mIn[4][39m[32m, line 5[39m
+[32m      1[39m [38;5;28;01mimport[39;00m[38;5;250m [39m[34;01mplotly[39;00m[34;01m.[39;00m[34;01mexpress[39;00m[38;5;250m [39m[38;5;28;01mas[39;00m[38;5;250m [39m[34;01mpx[39;00m
+[32m      3[39m [38;5;66;03m# World map with CO2 per capita and Healthy Life Expectancy[39;00m
+[32m      4[39m fig = px.scatter_geo(
+[32m----> [39m[32m5[39m     [43mmerged_df[49m[merged_df[[33m'[39m[33myear[39m[33m'[39m] == [32m2019[39m],
+[32m      6[39m     locations=[33m'[39m[33miso_code[39m[33m'[39m,
+[32m      7[39m     color=[33m'[39m[33mhealthy_life_expectancy_at_birth[39m[33m'[39m,
+[32m      8[39m     size=[33m'[39m[33mco2_per_capita[39m[33m'[39m,
+[32m      9[39m     color_continuous_scale=[33m'[39m[33mViridis[39m[33m'[39m,
+[32m     10[39m     hover_name=[33m'[39m[33mcountry[39m[33m'[39m,
+[32m     11[39m     title=[33m'[39m[33mHealthy Life Expectancy (color) and CO₂ Emissions per Capita (size) in 2019[39m[33m'[39m
+[32m     12[39m )
+[32m     14[39m fig.show()
 
-[31mNameError[39m: name 'go' is not defined
+[31mNameError[39m: name 'merged_df' is not defined
 
