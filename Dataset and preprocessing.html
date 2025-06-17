@@ -407,14 +407,14 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="dataset-and-preprocessing">
 <h1>Dataset and Preprocessing<a class="headerlink" href="#dataset-and-preprocessing" title="Link to this heading">#</a></h1>
-<p>At first, our team agreed that each member would identify at least one dataset with rich enough variables to yield multiple analytical perspectives. During our kickoff meeting, we evaluated several sources and discussed potential correlations. Ultimately, we selected the <strong>Our World in Data CO₂ Emissions</strong> and <strong>WHO Healthy Life Expectancy (HALE)</strong> datasets, spanning the years <strong>2000 through 2021</strong>, because they align perfectly with our main research question:</p>
+<p>At first, our group agreed that two members would identify at least one dataset with enough variables to yield multiple analytical perspectives. During our first meeting, we looked through several sources and discussed potential correlations. Eventually, we selected the <strong>Our World in Data CO₂ Emissions</strong> and <strong>WHO Healthy Life Expectancy (HALE)</strong> datasets, given the years <strong>2000 through 2021</strong>, because they align perfectly with our main research question:</p>
 <blockquote>
 <div><p><strong>How do national CO₂ emissions relate to healthy life expectancy across countries and over time?</strong></p>
 </div></blockquote>
-<p>These datasets provide a complementary view—environmental impact vs. population health—and include consistent identifiers (<code class="docutils literal notranslate"><span class="pre">iso_code</span></code>, <code class="docutils literal notranslate"><span class="pre">country</span></code>, <code class="docutils literal notranslate"><span class="pre">year</span></code>) for reliable merging.</p>
+<p>These datasets provide a complementary view of environmental impact vs. population health and include consistent identifiers (<code class="docutils literal notranslate"><span class="pre">iso_code</span></code>, <code class="docutils literal notranslate"><span class="pre">country</span></code>, <code class="docutils literal notranslate"><span class="pre">year</span></code>) for precise and reliable merging.</p>
 <section id="cleaning">
 <h2>Cleaning<a class="headerlink" href="#cleaning" title="Link to this heading">#</a></h2>
-<p>Both OWID and WHO datasets undergo periodic schema changes (column renames, extra metadata). We adopted a <strong>two-phase cleaning process</strong>:</p>
+<p>Both OWID and WHO datasets are going under periodic schema changes (column renames, extra metadata). We used a <strong>two-phase cleaning process</strong>:</p>
 <ol class="arabic simple">
 <li><p><strong>Rename &amp; restructure</strong></p>
 <ul class="simple">
@@ -435,13 +435,12 @@ document.write(`
 </li>
 <li><p><strong>Filter &amp; normalize</strong></p>
 <ul class="simple">
-<li><p>Retain five <strong>reference years</strong>: 2000, 2010, 2015, 2019, 2021.</p></li>
+<li><p>Keep five <strong>reference years</strong>: 2000, 2010, 2015, 2019, 2021.</p></li>
 <li><p>Exclude aggregate regions (e.g., “World”, “Asia”, “European Union (27)”) to focus on individual countries.</p></li>
-<li><p>Normalize inconsistent country names via ISO codes where needed.</p></li>
+<li><p>Secure inconsistent country names via ISO codes where needed.</p></li>
 </ul>
 </li>
 </ol>
-<p>To optimize performance and storage, we save the final cleaned dataset as a <strong>Parquet</strong> file with Gzip compression, reducing file size significantly.</p>
 </section>
 <section id="variable-descriptions">
 <h2>Variable Descriptions<a class="headerlink" href="#variable-descriptions" title="Link to this heading">#</a></h2>
@@ -457,11 +456,11 @@ document.write(`
 <li><p><strong>Categorical / Discrete variables:</strong></p>
 <ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">country</span></code>: Country name</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">year</span></code>: Reference year (integer)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">year</span></code>: Reference year (int)</p></li>
 </ul>
 </li>
 </ul>
-<p>These fields form the core of our analysis.</p>
+<p>These fields form the base of our analysis.</p>
 </section>
 <section id="custom-aggregation-co2-intensity-per-healthy-year">
 <h2>Custom Aggregation: CO₂ Intensity per Healthy Year<a class="headerlink" href="#custom-aggregation-co2-intensity-per-healthy-year" title="Link to this heading">#</a></h2>
