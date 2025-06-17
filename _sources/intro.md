@@ -13,7 +13,7 @@ Development, not emissions, drives health; wealthier nations often emit more but
 In the following sections, we introduce the datasets and then present visual evidence for each perspective. The goal is to understand whether CO₂ emissions are correlated with healthy life expectancy and to untangle the influence of development and policy factors.
 
 
-# Authors:
+# Authors
 - Haldor Bloembergen
 - Lina Musa Omar
 - Merijn Couperus
