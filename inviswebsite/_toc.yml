@@ -2,9 +2,11 @@
 format: jb-book
 root: intro      # je intro.md (zonder extensie)
 chapters:
-  - file: markdown      # markdown.md
-    title: Markdown Files
-  - file: mymarkdownfile # mymarkdownfile.md
-    title: Mijn Markdown
-  - file: notebooks      # notebooks.ipynb
-    title: Notebooks
+  - file: Dataset and preprocessing      # markdown.md
+    title: Dataset and preprocessing
+  - file: "The Impact of CO2 Emissions on Healthy Life Expectancy at Birth Per Country"
+    title: The Impact of CO₂ Emissions on Healthy Life Expectancy at Birth Per Country
+  - file: Reflection      # notebooks.ipynb
+    title: Reflection
+  - file: Work Distribution      # notebooks.ipynb
+    title: Work Distribution
