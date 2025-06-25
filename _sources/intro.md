@@ -3,7 +3,9 @@ For over a century, CO₂ emissions have fueled our industries, powered our econ
 We explore two perspectives:
 
 **Perspective 1:** Emissions harm health by increasing disease and reducing healthy years (Greenstone & Fan, 2021).
+
 **Perspective 2:** Development, not emissions, drives health; wealthier nations often emit more but also live longer (Deaton, 2003; Rosling et al., 2018).
+
 Our goal is not to make sweeping claims, but to visually explore global trends and correlations while recognizing the complexity of development, inequality, and environmental health. In the following sections, we introduce our datasets and present evidence that helps clarify the relationship between emissions and health.
 
 
